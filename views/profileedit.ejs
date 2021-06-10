@@ -1,0 +1,56 @@
+<%- include('partials/header1')  -%>
+    <div class="container edprofile">
+        <h1>Edit Profile</h1>
+        <hr>
+        <form class="form-horizontal" role="form" action="/user/<%=user._id%>?_method=PUT" method="POST" enctype="multipart/form-data">
+            <div class="row">
+                <!-- left column -->
+                <div class="col-md-3">
+                    <div class="text-center">
+                        <img src="<%=user.image%>" class="avatar img-circle" alt="avatar" style="width:150px;height:150px;border-radius:50%">
+                        <h6>Upload a different photo...</h6>
+
+                        <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                    </div>
+                </div>
+
+                <!-- edit form column -->
+                <div class="col-md-9 personal-info">
+                    <h3>Personal info</h3>
+
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">Full name:</label>
+                        <div class="col-lg-8">
+                            <input class="form-control" type="text" name="name" value="<%=user.name%>">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">Bio:</label>
+                        <div class="col-lg-8">
+                            <input class="form-control" type="text" name="bio" value="<%=user.bio%>">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label"></label>
+                        <div class="col-md-8">
+                            <button class="btn btn-primary submit" style="background-color:#51d0de">Save Changes</button>
+                        </div>
+                    </div>
+        </form>
+        </div>
+        </div>
+    </div>
+    <hr>
+    <script src=" /js/main.js "></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js " integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin=" anonymous "></script>
+    <script type="text/javascript ">
+        $(document).ready(function() {
+            $('.menu-btn').click(function() {
+                $('nav').toggleClass('active');
+            })
+        })
+    </script>
+
+    </body>
+
+    </html>

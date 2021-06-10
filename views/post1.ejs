@@ -1,0 +1,190 @@
+<%-include('partials/header1') -%>
+
+    <div class="container">
+        <div class="post-media">
+            <div class="image-media">
+                <img class="img-fluid" src="<%=post.image %>" alt="">
+            </div>
+            <div class="post-content">
+                <h1 class="title">
+                    <%=post.title%>
+                </h1>
+                <div class="post-user">
+                    <p style="font-size:0.9rem" class="mb-0">
+                        <span style="opacity:0.8"> <img src=" <%=post.postedBy.image %>" alt="" style="height:26px;width:26px;border-radius:50%;transform:translate(0,-3px);margin-right:4px;">
+                            <a href="/user/<%=post.postedBy.username%>/dashboard">
+                                <strong style="font-size:16px;line-height: 16px;font-weight:580;"><%=post.postedBy.username%>
+                            </strong>
+                            </a>
+                            </span>
+                </div>
+                <p>
+                    <%=post.content %>
+                </p>
+            </div>
+            <% if(currentuser==post.postedBy.username){%>
+                <div class="post-edit ">
+                    <form method="POST" action="/post/<%=post._id%>/delete?_method=DELETE">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button style="border:none;background-color: #fff;"><i class="fa fa-trash-o" aria-hidden="true" type="submit">
+                                Delete</i></button>
+                    </form>
+                    <a href="/post/<%=post._id%>/edit" style="color: #000"> <i class="fa fa-pencil" aria-hidden="true">Edit</i></a>
+
+                </div>
+
+            <% }%>
+            <div id="unlike-button-div" style="display: none;">  
+                <button id='unlike-button' class="like-button"><i id="unlike-button" class="fa fa-thumbs-up fa-5x"></i></button>
+                <span class="like-count"><span class='like-count-1' id="like-count"><%=post.likes.length%> </span>likes</span>
+            </div>
+            <div id="like-button-div" style="display: none;">
+                <button id='like-button' class="like-button"><i id="like-button" class="fa fa-thumbs-o-up fa-5x" aria-hidden="true"></i></button> 
+                <span class="like-count"> <span class='like-count-1' id="like-count"><%=post.likes.length%> </span>  likes</span>
+            </div> 
+        </div>
+    </div>
+
+    <form id="form-com"class="form-comment mb-4">
+
+        <input id="comment-val" type="text" placeholder="Add A Comment...." name="content" required style="width:88%;margin-left:1.5%;">
+        <button id ="add-comment"  type="submit" class="add">Add</button>
+
+    </form>
+    <div id="show-comments" class="show-comments">
+        <% console.log(post.comments.length) %> 
+         <% for(var i = post.comments.length-1;i >=0;i--) {%>
+            <div class="comments">
+                <div class="commentedby">
+                    <a href="/home/<%= post.comments[i].commentedby %>/dashboard">
+                        <%= post.comments[i].commentedby %>
+                    </a>
+                </div>
+                <div class="comment-content">
+                    <%= post.comments[i].content %>
+                </div>
+                <% if(currentuser===post.comments[i].commentedby){%>
+                    <div class="delete-button-div" todelete=<%=post.comments[i]._id  %> >
+                        <button id="delete-button" style="border:none;"><i class="fa fa-trash-o" aria-hidden="true" type="submit">  Delete</i></button>
+
+                </div>
+                <% }%>   
+            </div>
+        <%}%>
+    </div>
+
+    <script>
+        postLikes = '<%=post.likes %>'
+        console.log(postLikes)
+        username ='<%currentuser%>'
+        if(postLikes.indexOf(username) >= 0 && postLikes.length!==0){
+            console.log(postLikes.indexOf(username))
+            document.getElementById('unlike-button-div').style.display = 'block';
+        }else{
+            document.getElementById('like-button-div').style.display = 'block';
+        }
+
+        // adding like to the post clicking like button put request
+        $("button#like-button").on('click',function(e){
+            document.getElementById("like-button").disabled = true;
+            e.preventDefault();
+            var id_ = '<%= post.id%>'
+            data = {id:id_}
+            $.ajax({
+                type: 'PUT',
+                url : '/post/like',
+                data: data, 
+                dataType: 'json'
+            }).always(function(data){
+            document.getElementById("like-button").disabled = false;
+                document.getElementById('unlike-button-div').style.display = 'block';
+                document.getElementById('like-button-div').style.display = 'none';
+                var count = document.getElementsByClassName('like-count-1')[0].innerText
+                document.getElementsByClassName('like-count-1')[0].innerText = parseInt(count)+1;
+                document.getElementsByClassName('like-count-1')[1].innerText = parseInt(count)+1;
+
+            })
+        })
+        //clicking unlike button removing like user from array put request
+        $("button#unlike-button").on('click',function(e){
+            document.getElementById("unlike-button").disabled = true;
+
+            e.preventDefault();
+            var id_ = '<%= post.id%>'
+            data = {id:id_}
+            $.ajax({
+                type: 'PUT',
+                url : '/post/unlike',
+                data: data, 
+                dataType: 'json'
+            }).always(function(data){
+                document.getElementById("unlike-button").disabled = false;
+                document.getElementById('unlike-button-div').style.display = 'none';
+                document.getElementById('like-button-div').style.display = 'block';
+                var count = document.getElementsByClassName('like-count-1')[0].innerText
+                console.log(count,"c")
+                document.getElementsByClassName('like-count-1')[0].innerText = parseInt(count)-1;
+                document.getElementsByClassName('like-count-1')[1].innerText = parseInt(count)-1;
+
+            })
+        })
+
+        // adding new comment to db and show on the post page
+        // in chronological order 
+        $("form#form-com").on('submit',function(e){
+            content = document.getElementById('comment-val').value;
+            document.getElementById('comment-val').value = '';
+            e.preventDefault();
+            $.ajax({
+            url : "/post/<%=post.id%>/comment/add",
+            type:"POST",
+            data : {content: content},
+            dataType:'json'})
+            .always(function(data){
+                 var  content =  data.content;
+                 var username = data.commentedby;
+                 var id = data._id;
+                 var owner = "<%=currentuser%>"
+                 var htmlContent = ''
+                 htmlContent+= `
+                <div class="commentedby">
+                    <a href="/home/<%=currentuser%>/dashboard">
+                        <%= currentuser%>
+                    </a>
+                </div>
+                <div class="comment-content">
+                    ${content}
+                </div>
+                <div class="delete-button-div" todelete=${id}>                
+                    <button id="delete-button" style="border:none;"><i class="fa fa-trash-o" aria-hidden="true" type="submit">  Delete</i></button>
+                </div>`
+                var htmlElement = document.createElement("div");
+                htmlElement.innerHTML = htmlContent
+                htmlElement.classList.add("comments")
+                if('<%=post.comments.length%>'==='0') {
+                    document.getElementById("show-comments").appendChild(htmlElement)
+                }else{
+                    var firstComment = document.getElementById("show-comments").firstChild;
+                    var parentComment = document.getElementById("show-comments")
+                    parentComment.insertBefore(htmlElement, firstComment)
+                }
+             })
+        })
+
+        // deleting a comment from db
+        // and removing current node from post page
+        $(document).on("click", "[id^=delete-button]",function(e) {
+            x = e.target.parentElement.parentElement
+            var CommentIdToBeDeleted = x.getAttribute("todelete")
+            console.log(x)
+            $.ajax({
+                type:"delete",
+                dataType:"json",
+                url:`/post/<%=post._id%>/${CommentIdToBeDeleted}/comment/delete`
+            }).always(function(data){
+                parentElement = document.getElementById("show-comments")
+                parentElement.removeChild(x.parentElement)
+            })
+        })
+
+    </script>

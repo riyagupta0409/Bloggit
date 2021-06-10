@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <title>Bloggit - Surround yourself with the right people</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+    <link rel="icon" href="/images/logo.png">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/suggested.css">
+    <script src = "https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+</head>
+<body>
+    <div class="top mt-5 ml-sm-4">
+        <h1 class="heading">Select Your Favourite Categories</h1>
+        <a href="/user/suggested"> <button class="next-button mr-sm-4">Next &#10148;</button> </a>
+    </div>
+
+<div class="all-categories mx-auto px-auto">
+    <% for(var i = 0; i <categories.length; i++) { %>  
+        <div class="category" id="follow-button" categoryId=<%=categories[i]._id%>>
+            <div class="category-image" style="width:100%;height:100%;">
+                <img src="<%=categories[i].image%>" alt="">
+            </div>
+                <div class="category-heading ">
+                    <p id="heading"><%= categories[i].title%> </p>
+                </div>
+        </div>
+    <% } %>
+</div>
+
+
+
+
+<script src = "https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+       // follow category request
+       $(document).on('click',"[id^=follow-button]",function(e){
+           if(e.target.id === 'category-heading'){e.target = e.target.children[0];}
+           if(e.target.parentElement.parentElement.id!=='follow-button'){return 0;}
+            categoryId = e.target.parentElement.parentElement.getAttribute('categoryId')
+            $.ajax({
+                url:`/category/${categoryId}/follow`,
+                method:'put'
+            }).always(function(s){
+            var row = e.target.parentElement.parentElement;
+            row.style.backgroundColor = '#000080';
+            row.style.border =  '5px solid #000080';
+            row.style.margin = '15px';
+            e.target.parentElement.parentElement.id = 'unfollow-button'
+            e.target.parentElement.parentElement.children[1].children[0].style.color = 'white';
+        })
+        })
+
+        // unfollow category request
+        $(document).on('click',"[id^=unfollow-button]",function(e){
+           if(e.target.parentElement.parentElement.id!=='unfollow-button'){return 0;}
+            categoryId = e.target.parentElement.parentElement.getAttribute('categoryId')
+            $.ajax({
+                url:`/category/${categoryId}/unfollow`,
+                method:'put'
+            }).always(function(s){
+            var row = e.target.parentElement.parentElement;
+            row.style.backgroundColor = '#fff';
+            row.style.border =  'none';
+            row.style.margin = '20px';
+            e.target.parentElement.parentElement.id = 'follow-button'
+            e.target.parentElement.parentElement.children[1].children[0].style.color = 'black';
+            })
+        })
+    
+</script>
+
+<%- include('partials/footer1')  -%>

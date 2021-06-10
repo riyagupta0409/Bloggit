@@ -1,0 +1,74 @@
+<%- include('partials/header1')  -%>
+    <div class="bookmarks container">
+        <h1 id="savedhead">Your Bookmarks</h1>
+        <div class="">
+            <% if (savedpost.length==0){ %>
+                <div class="cen">You have no saved posts :-(</div>
+                <%}%>
+                <div id="show-all-bookmarks" class="all-posts col-12 col-lg-8 ">
+                    <%  for(var i=savedpost.length-1;i>=0;i--){ %>
+        
+                        <div class="content-template-main " style="margin-top:40px;">
+        
+                            <div class=" content-template">
+                                <div class="post-user">
+                                    <p style="font-size:0.9rem" class="mb-0">
+                                        <span style="opacity:0.8"> <img src=" <%=savedpost[i].postedBy.image %>" alt="" style="height:26px;width:26px;border-radius:50%;transform:translate(0,-3px);margin-right:4px;">
+                                            <a href="/user/<%=savedpost[i].postedBy.username%>/dashboard">
+                                                <strong style="font-size:16px;line-height: 16px;font-weight:580;"><%=savedpost[i].postedBy.username%>
+                                            </strong>
+                                            </a>
+                                            </span>
+                                </div>
+                                <h4 style="margin-bottom:0;">
+                                    <a class="to-title" id="post-title-1" href="/post/<%=savedpost[i]._id%>" style="color:#000;">
+                                        <%= savedpost[i].title.toLowerCase()%>
+                                    </a>
+                                </h4>
+                                <p id="post-content-1" style="margin-top:10px; margin-bottom:5px; font-weight:450;margin-bottom:0;opacity:0.8">
+                                    <%=savedpost[i].content.substring(0,120)%>....</p>
+        
+        
+                                <div class="one-line d-flex justify-content-between" style="padding-right:20px;">
+                                    <div class="" style="margin:0;margin-top:5px;">
+                                        <p style="opacity:1;font-size: 15px;margin-top:8px;">
+                                            <%=savedpost[i].date %> &bull;
+                                                <%=Math.round(savedpost[i].content.length/500)%> mins read
+                                        </p>
+                                    </div>
+                                    <div class="post-edit pb-2" postid = <%=savedpost[i]._id %> >
+                         <button id='unsave-button' style="border:none;background-color: #fff;font-size:20px"><i class= 'fa' aria-hidden="true">&#xf02e;</i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="content-template-image" style="width:100%;height:100%;">
+                                <% if(savedpost[i].image){ %>
+                                    <img src="<%=savedpost[i].image %>" alt="profile image">
+                                    <% } %>
+                            </div>
+                        </div>
+                        <%   }  %>
+                </div>
+
+        </div>
+    </div>
+
+
+    <script>
+        $(document).on('click','[id^=unsave-button]', function(e) {
+            var NodeToBeRemoved = e.target.parentElement.parentElement.parentElement.parentElement.parentElement
+            x  = e.target.parentElement.parentElement
+            postId = x.getAttribute("postid")
+            $.ajax({
+                url :`/post/${postId}/unsave`,
+                method:'put',
+            }).always(function(res){
+                console.log('success')
+                var parent = document.getElementById('show-all-bookmarks')
+                parent.removeChild(NodeToBeRemoved)
+            })
+        })
+    </script>
+
+
+    <%- include('partials/footer1')  -%>

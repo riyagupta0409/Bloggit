@@ -1,0 +1,267 @@
+<%- include('partials/header1')  -%>
+
+    <% var savedpostsid = []%>
+    <% for(var i = 0; i <savedposts.length;i++){%>
+        <% savedpostsid.push(savedposts[i]._id.toString()) %>
+        <% } %>  
+
+    <div id="container1" class="container mx-auto mt-5 " style="border-bottom:1px solid #ccc;margin-bottom:0px;">
+        <div class="row" style="margin-bottom:40px;">
+
+            <div class="selected row col-lg-9 change-border">
+                <div class="col-lg-6 col-md-6 col-sm-12 pr-md-4">
+                    <% var j = Math.floor(Math.random() *posts.length);%>
+                        <%var arr = [] %>
+                            <% arr.push(j) %>
+                                <div class="mb-0 px-auto" style="width:100%;">
+                                    <% if (posts[j].image){ %>
+                                        <img src="<%=posts[j].image %>" alt="profile image" style="height:auto;width:100%">
+                                        <% } %>
+                                </div>
+                                <div class="post-user mt-3 mb-5">
+                                    <p style="font-size:0.9rem" class="mb-0">
+                                        <span style="opacity:0.8"> <img src=" <%=posts[j].postedBy.image %>" alt=""
+                                        style="height:26px;width:26px;border-radius:50%;transform:translate(0,-3px);margin-right:4px;">
+                                    <a href="/user/<%=posts[j].postedBy.username%>/dashboard">
+                                        <strong
+                                            style="font-size:16px;line-height: 16px;font-weight:580;"><%=posts[j].postedBy.username%></strong>
+                                    </a> &bull; <%= posts[j].date %></span>
+                                    </p>
+                                    <h2 style="margin:0px;font-size: 25px;font-weight:650;line-height:25px;margin-top: 6px;margin-bottom:4px;">
+                                        <a class="to-title" href="/post/<%=posts[j]._id  %>" style="color:#000;">
+                                            <%=posts[j].title%>
+                                        </a>
+                                    </h2>
+                                    <p style="opacity:0.8">
+                                        <%=posts[j].content.substring(0,120) %>...
+
+                                    </p>
+
+                                </div>
+
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 p-0">
+                    <% var l =1 ;%>
+                        <%while(l<4){%>
+                            <% var i = Math.floor(Math.random() *posts.length)%>
+
+                                <%if(!(arr.includes(i))){ %>
+                                    <% arr.push(i) %>
+                                        <%l=l+1%>
+                                            <div class="row mb-4 pl-2">
+                                                <div class="col-8 content-template pr-2">
+                                                    <div class="post-user pt-1">
+                                                        <p style="font-size:0.9rem" class="mb-0">
+                                                            <span style="opacity:0.8"> <img src=" <%=posts[i].postedBy.image %>" alt=""
+                                                style="height:26px;width:26px;border-radius:50%;transform:translate(0,-3px);margin-right:4px;">
+                                            <a href="/user/<%=posts[i].postedBy.username%>/dashboard">
+                                                <strong
+                                                    style="font-size:16px;line-height: 16px;font-weight:580;"><%=posts[i].postedBy.username%></strong>
+                                            </a> &bull; <%= posts[i].date %></span>
+                                                        </p>
+                                                        <p style="margin-top:3px;margin-bottom:1px;">
+                                                            <a class="to-title" href="/post/<%=posts[i]._id  %>" style="line-height:20px;color:rgba(41, 41, 41, 1);font-size: 18px;font-weight:750;">
+                                                                <%=posts[i].title.toLowerCase()%>
+                                                            </a>
+                                                        </p>
+                                                        <p style="opacity:0.8;font-size: 15px;margin-top:8px;">
+                                                                <%=Math.round(posts[i].content.length/500)%> mins read
+                                                        </p>
+
+
+                                                    </div>
+                                                </div>
+                                                <div class="col-4 pr-md-4  content-template-image pb-3">
+                                                    <% if(posts[i].image){ %>
+                                                        <img src="<%=posts[i].image %>" alt="profile image" style="height:100%;">
+                                                        <% } %>
+                                                </div>
+                                            </div>
+
+
+                                            <% } %>
+                                                <%   }  %>
+
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-12 mt-3" style="margin-left: 30px;" style="width: 100%;">
+                <div class="about-users mt-lg-2  d-felx flex-column justify-content-center align-content-center " style="width: 100%;">
+
+                    <div class="about-users-1 d-flex flex-row mx-auto px-auto">
+                        <div class="user-image">
+                            <img src="<%=uimage  %> " alt="" style="height:60px;width:60px;border-radius:50%;margin-right:5px">
+                        </div>
+                        <div class="user-details mt-1">
+                            <h4 style="font-size:18px">
+                                <%=name  %>
+                            </h4>
+                            <a href="/user/profile">
+                                <h4 style="opacity:0.7">
+                                    <%=username  %>
+                                </h4>
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
+                <h4 style="font-size:16px;font-weight:500;opacity:0.6;line-height:14px;margin-left:5px;margin-top:50px;">
+                    BROWSE BY CATEGORY </h4>
+                <div class="categories mt-3 px-auto d-flex flex-row flex-wrap">
+                    <% for(var i=0; i<categories.length; i++) {%>
+                        <% if(i>10){break;} %> 
+                        <div class="category-1">
+                            <a href="/category/<%=categories[i].title%>" class="category-link">
+                                <p><%=categories[i].title%></p>
+                            </a>
+                        </div>
+                        <% } %>  
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+
+
+    <div id="main1" class="main row " style="width: 100%;margin:0;padding-top:60px;">
+
+        <div class="all-posts col-12 col-lg-8 ">
+            <%  for(var i=posts.length-1;i>=0;i--){ %>
+
+                <div class="content-template-main " style="margin-top:40px;">
+
+                    <div class=" content-template">
+                        <div class="post-user">
+                            <p style="font-size:0.9rem" class="mb-0">
+                                <span style="opacity:0.8"> <img src=" <%=posts[i].postedBy.image %>" alt="" style="height:26px;width:26px;border-radius:50%;transform:translate(0,-3px);margin-right:4px;">
+                                    <a href="/user/<%=posts[i].postedBy.username%>/dashboard">
+                                        <strong style="font-size:16px;line-height: 16px;font-weight:580;"><%=posts[i].postedBy.username%>
+                                        <span style="opacity:0.6">in</span>
+                                        <% console.log(posts[i].category) %> 
+                                <%=posts[i].category.title.toLowerCase()  %>
+                                    </strong>
+                                    </a>
+                                    </span>
+                        </div>
+                        <h4 style="margin-bottom:0;">
+                            <a class="to-title" id="post-title-1" href="/post/<%=posts[i]._id  %>" style="color:#000;">
+                                <%= posts[i].title.toLowerCase()%>
+                            </a>
+                        </h4>
+                        <p id="post-content-1" style="margin-top:10px; margin-bottom:5px; font-weight:450;margin-bottom:0;opacity:0.8">
+                            <%=posts[i].content.substring(0,120)%>....</p>
+
+
+                        <div class="one-line d-flex justify-content-between" style="padding-right:20px;">
+                            <div class="" style="margin:0;margin-top:5px;">
+                                <p style="opacity:1;font-size: 15px;margin-top:8px;">
+                                    <%=posts[i].date %> &bull;
+                                        <%=Math.round(posts[i].content.length/500)%> mins read
+                                </p>
+                            </div>
+                            <div class="post-edit pb-2" postid = <%=posts[i]._id %> >
+                                <% if(savedpostsid.includes(posts[i]._id.toString())) {%>
+                                    <% var id1 = 'unsave-button' %> 
+                                    <% var icode =  '&#xf02e;' %> 
+                                    
+                                <% }else{  %> 
+                                    <% var id1 = 'save-button' %> 
+                                    <% var icode =  '&#xf097;'%> 
+                                   
+                                <% } %> 
+       <button id=<%=id1%> style="border:none;background-color: #fff;font-size:20px"><i class= 'fa' aria-hidden="true"><%-icode %></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content-template-image" style="width:100%;height:100%;">
+                        <% if(posts[i].image){ %>
+                            <img src="<%=posts[i].image %>" alt="profile image">
+                            <% } %>
+                    </div>
+                </div>
+                <%   }  %>
+        </div>
+        <div id='fixed-side' class=" col-lg-4">
+            <div class="reading-list">
+                <p><i class="fa fa-bookmark"></i> <span style="margin-left:8px;">YOUR BOOKMARKS</span> </p>
+                <div class="">
+                    <% if(savedposts.length ===0) {%>
+                        <p>You have no saved posts</p>
+                        <% }  %>
+                            <% if(savedposts.length ===1){ %>
+                                <div class="bookmark-blogs" style="margin:10px 0; padding:10px;">
+                                    <p style="margin-top:2px;margin-bottom:1px;">
+                                        <a class="to-title" href="/post/<%=savedposts[0]._id  %>" style="color:#000;font-size: 16px;font-weight:600;">
+                                            <%=savedposts[0].title.toLowerCase()%>
+                                        </a>
+                                    </p>
+                                    <p style="margin-top:2px;margin-bottom:1px;font-size: 15px;font-weight:450;opacity: 0.7">
+                                        <%=savedposts[0].content.substring(0,80)%>
+                                    </p>
+                                </div>
+                                <% } %>
+                                    <% if(savedposts.length > 1) {%>
+                                        <% for(var j=savedposts.length-1;j>=savedposts.length-2;j--){ %>
+                                            <div class="bookmark-blogs" style="margin:10px 0; padding:10px;">
+                                                <p style="margin-top:2px;margin-bottom:1px;">
+                                                    <a class="to-title" href="/post/<%=savedposts[j]._id  %>" style="color:#000;font-size: 16px;font-weight:600;">
+                                                        <%=savedposts[j].title.toLowerCase()%>
+                                                    </a>
+                                                </p>
+                                                <p style="margin-top:2px;margin-bottom:1px;font-size: 15px;font-weight:450;opacity: 0.7">
+                                                    <%=savedposts[j].content.substring(0,80)%>
+                                                </p>
+                                            </div>
+                                            <% } %>
+                                                <% } %>
+                </div>
+
+                <a href="/bookmarks" class="bookmark-home-link">See Full list</a>
+            </div>
+
+
+        </div>
+
+    </div>
+    <div style="margin-bottom: 100px;"></div>
+
+    <script type="text/javascript">
+
+        // add post to bookmarks 
+        // change bookmark icon
+        $(document).on('click',"[id^=save-button]" ,function(e) {
+            x  = e.target.parentElement.parentElement
+            postId = x.getAttribute("postid")
+            $.ajax({
+                url :`/post/${postId}/save`,
+                method:'put',
+            }).always(function(res){
+                Icon = e.target
+                Icon.innerHTML = '&#xf02e;'
+                e.target.parentElement.id = 'unsave-button'
+            })
+        })
+
+        //remove post from bookmark
+        // change bookmark icon
+        $(document).on('click',"[id^=unsave-button]" ,function(e) {
+            x  = e.target.parentElement.parentElement
+            postId = x.getAttribute("postid")
+            $.ajax({
+                url :`/post/${postId}/unsave`,
+                method:'put',
+            }).always(function(res){
+                console.log('success')
+                Icon = e.target
+                Icon.innerHTML ='&#xf097;'
+                e.target.parentElement.id = 'save-button'
+            })
+        })
+
+
+
+    </script>
+
+
+    <%- include('partials/footer1')  -%>

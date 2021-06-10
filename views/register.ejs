@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+    <link rel="stylesheet" href="/css/start.css">
+    <title>Bloggit</title>
+    <link rel="icon" href="/images/logo.png">
+</head>
+
+<body>
+
+    <div class="main">
+        <div class="container" style="margin-top:80px;">
+            <form class="form" id="form" action="/register" method="POST">
+                <h2 style="text-align:center;">REGISTER</h2>
+                <div class="form-control">
+
+                    <input id="username" type="text" placeholder="Username..." name="username" maxlength=15 required>
+                </div>
+                <div class="form-control">
+
+                    <input id="password" type="Password" placeholder="Enter password" name="password" minlength=5 required>
+                </div>
+                <div class="form-control">
+
+                    <input id="name" type="text" placeholder="Enter your full name..." name="name" required>
+                </div>
+                <div class="form-control">
+
+                    <input id="bio" type="textarea" placeholder="Enter a short bio here.." name="bio" required>
+                </div>
+                <button>Register</button>
+            </form>
+
+        </div>
+        <h5 style="color:rgb(61, 60, 60);font-size:17px;font-family:sans-serif;position:absolute;bottom:1px">
+            &copy;BLOGGIT DEVELOPED BY RIYA</h5>
+    </div>
+</body>
+
+</html>

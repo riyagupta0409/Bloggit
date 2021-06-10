@@ -1,0 +1,128 @@
+<%-include('partials/header1') -%>
+
+    <div class="container">
+        <div class="post-media">
+            <div class="image-media">
+                <img class="img-fluid" src="<%=post.image %>" alt="">
+            </div>
+            <div class="post-content">
+                <h1 class="title">
+                    <%=post.title%>
+                </h1>
+                <div class="post-user" style="align-self:flex-start">
+                    <a href="/home/<%=post.postedBy%>/dashboard">
+                        <%=post.postedBy%>
+                    </a> <span style="opacity:0.8;"> . Uploaded On <%= post.date %></span>
+
+                </div>
+                <p>
+                    <%=post.content %>
+                </p>
+            </div>
+            <% if(currentuser==post.postedBy){%>
+                <div class="post-edit ">
+                    <form method="POST" action="/posts/<%=post._id%>/delete?_method=DELETE">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button style="border:none;background-color: #fff;"><i class="fa fa-trash-o" aria-hidden="true" type="submit">
+                                Delete</i></button>
+                    </form>
+                    <a href="/posts/<%=post._id%>/edit" style="color: #000"> <i class="fa fa-pencil" aria-hidden="true">Edit</i></a>
+
+                </div>
+
+                <% }%>
+                    <% if(post.likes.indexOf(currentuser) > -1) {%>
+                            <button id='unlike-button' class="like-button"><i id="unlike-button"
+                                    class="fa fa-thumbs-up fa-5x"></i></button><span class="like-count">
+                                        <%=post.likes.length%>
+                                        likes</span>
+                        </div>
+                        <div id="like-button-div-1" style="display: none;">
+                            <button id='like-button' class="like-button"><i id="like-button" class="fa fa-thumbs-o-up fa-5x"
+                                    aria-hidden="true"></i></button> <span class="like-count"> <%=post.likes.length -1%> likes</span>
+                        </div>
+
+                        <%}  else { %>
+                            <div id="like-button-div-2">
+                                <button id='like-button' class="like-button"><i id="like-button" class="fa fa-thumbs-o-up fa-5x"
+                                        aria-hidden="true"></i></button> <span class="like-count"> <%=post.likes.length%> likes</span>
+                            </div>
+                            <div id="unlike-button-div-2" style="display:none;">
+                                <form action="/<%=post._id%>/unlike?_method=DELETE" method="post" style="margin-top:30px;">
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <button id='unlike-button' class="like-button"><i id="unlike-button"
+                                            class="fa fa-thumbs-up fa-5x"></i></button><span class="like-count">
+                                                <%=post.likes.length +1%>
+                                                likes</span>
+                                </form>
+                                </div>
+                            <%}%>
+        </div>
+    </div>
+
+
+    <form id="form-com" action="/posts/<%=post.id%>/comments" method="POST" class="form-comment">
+
+        <input type="text" placeholder="Add A Comment...." name="content" required style="width:88%;margin-left:1.5%;">
+        <button type="submit" class="add">Add</button>
+
+    </form>
+
+    <% post.comments.forEach(function(comment) {%>
+        <div class="comments">
+            <div class="commentedby">
+                <a href="/home/<%= comment.commentedby %>/dashboard">
+                    <%= comment.commentedby %>
+                </a>
+            </div>
+            <div class="comment-content">
+                <%= comment.content %>
+            </div>
+            <% if(currentuser==comment.commentedby){%>
+                <form method="post" action="/<%=post.id%>/<%=comment._id%>/delete?_method=DELETE">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button style="border:none;"><i class="fa fa-trash-o" aria-hidden="true" type="submit">  Delete</i></button>
+                </form>
+                <% }%>
+
+
+        </div>
+        <%})%>
+
+        <script>
+           
+        $(document).ready(function(){
+            $("button#like-button").on("click" , function(e){
+                    e.preventDefault();
+                    console.log("hello")
+                    var data = '<%= post.id %>'
+                    $.ajax({
+                        type: "POST",
+                        url:'/post/like',
+                        data:{data:data},
+                        datatype:'text',
+                    }).done(function(data){
+                        console.log(data)
+                        document.getElementById('like-button-div-2').style.display='none';
+                        document.getElementById('unlike-button-div-2').style.display = 'block';                       
+                    })
+            })
+            $("button#like-button").on("click" , function(e){
+                    e.preventDefault();
+                    console.log("hello")
+                    var data = '<%= post.id %>'
+                    $.ajax({
+                        type: "POST",
+                        url:'/post/like',
+                        data:{data:data},
+                        datatype:'text',
+                    }).done(function(data){
+                        console.log(data)
+                        document.getElementById('like-button-div-2').style.display='none';
+                        document.getElementById('unlike-button-div-2').style.display = 'block';                       
+                    })
+            })     })
+
+        </script>
+
+            <%-include('partials/footer1') -%>

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bloggit - Surround yourself with the right people</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+    <link rel="icon" href="/images/logo.png">
+    <link rel="stylesheet" href="/css/start.css">
+    <script src = "https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+</head>
+<body>
+
+    <div class="container" id="container">
+        <div class="form-container sign-up-container" id="sign-up-container">
+            <form id="sign-up-form">
+                <h1 class="responsive-head">BLOGGIT</h1>
+
+                <div class="form-control ">
+                    <input type="text" id="sign-up-username" name="username" placeholder="Username" />
+                    <small>error message</small>                
+                </div>
+                <div class="form-control">
+                    <input type="text" id="sign-up-email" name="email" placeholder="Email" />
+                    <small>error message</small>                
+                </div>
+                <div class="form-control">
+                    <input type="text" id="sign-up-name" name="name" placeholder="Name" />
+                    <small>error message</small>                
+                </div>              
+                <div class="form-control">
+                    <input type="password" id="sign-up-password" name="password" placeholder="Password" />
+                    <small>error message</small>                
+                </div>
+                <div class="form-control">
+                    <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm Password" />
+                    <small>error message</small>                
+                </div>
+                <button style="margin-top:10px;">Sign Up</button>
+                <p>Already have an account ?<a id="signIn" href="#"style="align-self: start;"> <u>Sign in </u> </a></p>
+            </form>
+        </div>
+        <div class="form-container sign-in-container" id="sign-in-container">
+            <form id="sign-in-form">
+                <h1 class="responsive-head">BLOGGIT</h1>
+                <p id="incorrect-info" style="display: none;color:#000;margin:5px 0;">* Incorrect username or password</p>
+                <input type="text" id="sign-in-username" name="sign-in-username" placeholder="Username" />
+              
+                <input type="password" name='sign-in-password' id="sign-in-password" placeholder="Password" />
+               
+                <a href="#" >Forgot your password?</a>
+                <button id="sign-in-button" type="submit">Sign In</button>
+                <p >Haven't registered yet ? <a id="signUp" href="#"style="align-self: start;"> <u>Register now</u> </a></p>   </a>
+            </form>
+        </div>
+        <div class="overlay-container" id="overlay-container">
+            <div class="overlay">
+                <div class="overlay-panel overlay-left">
+                    <h1 class="heading">BLOGGIT</h1>
+                    <p class="tagline">Surround yourself with the right people</p>
+                </div>
+                <div class="overlay-panel overlay-right">
+                    <h1 class="heading">BLOGGIT</h1>
+                    <p class="tagline">Surround yourself with the right people</p>
+                    <!-- <button class="ghost" id="signUp">Sign Up</button>  -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <footer>
+        <p>
+            &copy;  BLOGGIT DEVELOPPED BY RIYA
+        </p>
+    </footer>
+    
+<script src = "https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+
+// js animation on sliding  -- start
+const signUpButton = document.getElementById('signUp');
+const signInButton = document.getElementById('signIn');
+const container = document.getElementById('container');
+
+
+signUpButton.addEventListener('click', () => {
+	    container.classList.add("right-panel-active");
+})
+signInButton.addEventListener('click', () => {
+	container.classList.remove("right-panel-active");
+});
+// js animation on sliding  -- end
+
+// sign-in form submit check -- start 
+console.log($('#sign-in-form'))
+$( "#sign-in-form" ).submit(function( event ) {
+  var username = document.getElementById('sign-in-username').value;
+  var password = document.getElementById('sign-in-password').value;
+  event.preventDefault();
+  $.ajax({
+      url:'/login',
+      method: 'POST',
+      data :{username: username, password: password}, 
+      error: function(){document.getElementById('incorrect-info').style.display='block';},
+      success: function(){window.location.href="/home"; }
+  })
+});
+// sign-in form submit check -- end
+
+// sign-up form submit check -- start 
+
+$( "#sign-up-form" ).submit(function( event ) {
+  flag = 1 
+
+
+  event.preventDefault();
+  var name = document.getElementById('sign-up-name');
+  var username = document.getElementById('sign-up-username');
+  var email = document.getElementById('sign-up-email');
+  var password1 = document.getElementById('sign-up-password');
+  var password2 = document.getElementById('confirm-password');
+
+// // verify email
+  var resp = checkRequired(email);
+  if(resp==="1"){
+      var res1 = checkEmail(email)
+      if(res1==="0"){
+          flag = 0 
+      }
+  }else{
+      flag = 0
+  }
+
+// verify passwords  
+var resp1 = checkRequired(password1);
+var resp2 = checkRequired(password2); 
+if(resp1==="1"){
+    var resp3 = checkLength(password1,6,15);
+}else{
+    flag=0
+}
+if(resp3==="1" && resp2==="1"){
+    var resp4 = checkPasswords(password1,password2);
+    if(resp4==="0"){
+        flag = 0
+    }
+}else{
+    flag = 0 
+}
+
+// check name required field 
+var resp1 = checkRequired(name);
+if(resp1==="0"){
+    flag =0
+}
+
+// check username 
+var resp1 = checkRequired(username);
+if(resp1==="0"){flag=0}
+else{
+    resp2 = checkLength(username,5,15);
+    if(resp2==="0"){flag=0}
+    else{
+        username1 = username.value;  
+        $.ajax({
+            url:`/check/${username1}`,
+            method:'GET',
+            error: function(){showError(username,'username already exists');
+                                flag = 0},
+            success:function(){
+                if(flag){
+                   $.ajax({
+                       url:`/register`,
+                       method:'POST',
+                       data: {username:username.value , password:password1.value , name:name.value , email:email.value},
+                       success:function(){window.location.href="/category/suggested/all";},
+                       error:function(){window.location.href="/"}
+                   }) 
+                }
+            }
+        })
+    }
+}
+
+})
+
+// show error msg function 
+function showError(input, message) {
+    const formControl = input.parentElement;
+    formControl.className = 'form-control error';
+    const small = formControl.querySelector('small');
+    flag = 0
+    small.innerText = message;
+}
+
+// show success msg function 
+function showSuccess(input) {
+    const formControl = input.parentElement;
+    formControl.className = 'form-control success';
+}
+
+// field name 
+function getFieldName(input) {
+    return input.name.charAt(0).toUpperCase() + input.name.slice(1);
+}
+
+// email regex function
+function checkEmail(input) {
+    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (re.test(input.value.trim())) {
+        showSuccess(input," ");
+        return "1" ;
+    } else {
+        showError(input, 'Email is not valid');
+        return "0" ;
+    }
+}
+
+// check if a field is required 
+function checkRequired(input) {
+    if (input.value.trim() === '') {
+        showError(input, `${getFieldName(input)} is required`);
+        return "0" ; 
+    } else{
+    showSuccess(input);
+    return "1" ; 
+    }
+}
+
+
+
+// check length of fields 
+function checkLength(input, min, max) {
+    if (input.value.length < min && input.value.length > 0) {
+        showError(input, `too small`);
+        return"0" ; 
+    } else if (input.value.length > max) {
+        showError(input, `too large`);
+        return "0" ; 
+    }else{
+        showSuccess(input);
+    return "1" ; }
+}
+
+// match password and confirm password 
+function checkPasswords(input1, input2) {
+    if (input1.value !== input2.value) {
+        showError(input2, 'Password do not match');
+        return "0" ;
+    }
+    showSuccess(input2);
+    return "1" ; 
+}
+
+
+</script>
+
+</body>
+</html>

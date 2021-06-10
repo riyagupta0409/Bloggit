@@ -1,0 +1,130 @@
+<%- include('partials/header1')  -%>
+
+    <div class="profile-card">
+        <div class="image-media ">
+            <img class="profile-image" src="<%=user.image %>" alt="">
+        </div>
+        <div class="user-info">
+
+            <span class = "d-flex flex-row">
+                <h4 style="opacity:0.8" class="mr-2">
+                    <%=user.username%>
+                </h4>
+                <% console.log(user._id,owner._id) %> 
+                <% if(JSON.stringify(owner._id) !== JSON.stringify(user._id)) { %>
+                    <% console.log(owner.following) %> 
+                    <% var flag = 1 %> 
+                    <% for(var i = 0; i <owner.following.length;i++) { %> 
+                        <% if(JSON.stringify(owner.following[i]) === JSON.stringify(user._id)) {%>       
+                            <% console.log("a" , owner.following[i]) %>                 
+                            <% var flag=0 %> 
+                            <% break %>                 
+                        <% } %> 
+                    <% } %>
+                    <% if(flag===1) {%>
+                        <% idname = 'follow-button' %> 
+                        <% buttontext = 'Follow' %>                       
+                    <% } else { %>
+                        <% var idname = 'unfollow-button' %> 
+                        <% var buttontext = 'Unfollow' %> 
+                    <% } %> 
+                    <button id=<%=idname%>  userid = <%=user._id%>   type="submit" class="btn btn-primary"><%=buttontext%></button>                                         
+                <% } %>
+
+            </span>
+            <h4>
+                <b><%=user.name%></b>
+            </h4>
+            <h4>
+                <b><%=user.posts.length%></b> posts
+            </h4>
+            <h4 style="opacity:0.9">
+                <%=user.bio%>
+            </h4>
+        </div>
+    </div>
+    <hr id="hr1">
+    <div class="">
+
+        <div class=" blogs-template">
+            <div class="all-posts col-12 col-lg-8 ">
+                <%  for(var i=posts.length-1;i>=0;i--){ %>
+                    <div class="content-template-main " style="margin-top:40px;">
+    
+                        <div class=" content-template">
+                            <div class="post-user">
+                                <p style="font-size:0.9rem" class="mb-0">
+                                    <% console.log(posts[i].postedBy) %> 
+                                    <span style="opacity:0.8"> <img src=" <%=posts[i].postedBy.image %>" alt="" style="height:26px;width:26px;border-radius:50%;transform:translate(0,-3px);margin-right:4px;">
+                                        <a href="/user/<%=posts[i].postedBy.username%>/dashboard">
+                                            <strong style="font-size:16px;line-height: 16px;font-weight:580;"><%=posts[i].postedBy.username%>
+                                        </strong>
+                                        </a>
+                                        <% console.log(posts[i].category) %> 
+                                        </span>
+                            </div>
+                            <h4 style="margin-bottom:0;">
+                                <a class="to-title" id="post-title-1" href="/post/<%=posts[i]._id  %>" style="color:#000;">
+                                    <%= posts[i].title.toLowerCase()%>
+                                </a>
+                            </h4>
+                            <p id="post-content-1" style="margin-top:10px; margin-bottom:5px; font-weight:450;margin-bottom:0;opacity:0.8">
+                                <%=posts[i].content.substring(0,120)%>....</p>
+    
+    
+                            <div class="one-line d-flex justify-content-between" style="padding-right:20px;">
+                                <div class="" style="margin:0;margin-top:5px;">
+                                    <p style="opacity:1;font-size: 15px;margin-top:8px;">
+                                        <%=posts[i].date %> &bull;
+                                            <%=Math.round(posts[i].content.length/500)%> mins read
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="content-template-image" style="width:100%;height:100%;">
+                            <% if(posts[i].image){ %>
+                                <img src="<%=posts[i].image %>" alt="profile image">
+                                <% } %>
+                        </div>
+                    </div>
+                    <%   }  %>
+            </div>
+            
+
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+
+        // for follow button
+        $(document).on('click','[id^=follow-button]',function(e){
+            console.log(e.target)
+            UserId = e.target.getAttribute('userid')
+            $.ajax({
+                url:`/user/${UserId}/follow`,
+                method:'put'
+            }).always(function(s){
+            console.log(s)
+            e.target.id = 'unfollow-button'
+            e.target.innerText = 'Unfollow'
+        })
+    })
+
+
+        // for unfollow button
+        $(document).on('click','[id^=unfollow-button]',function(e){
+            console.log(e.target)
+            UserId = e.target.getAttribute('userid')
+            $.ajax({
+                url:`/user/${UserId}/unfollow`,
+                method:'put'
+            }).always(function(s){
+            console.log(s)
+            e.target.id = 'follow-button'
+            e.target.innerText = 'Follow'
+        })
+        })
+    </script>
+
+    <%- include('partials/footer1')  -%>

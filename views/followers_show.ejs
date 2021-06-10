@@ -1,0 +1,44 @@
+<%- include('partials/header1')  -%>
+
+<div class="show_followers ml-5 mt-4" style = "min-height:66vh;">
+    <% for(var i = 0; i <followers.length;i++) { %>
+        <div class="mt-lg-2  d-inline-felx  flex-column  " >
+
+            <div class=" d-flex flex-row mx-auto px-auto">
+                <div class="user-image">
+                    <img src="<%=followers[i].image  %> " alt="" style="height:60px;width:60px;border-radius:50%;margin-right:5px">
+                </div>
+                <div class="user-details mt-1">
+                    <h4 style="font-size:18px">
+                        <%=followers[i].name  %>
+                    </h4>
+                    <a href="/user/<%=followers[i].username%>/dashboard">
+                        <h4 style="opacity:0.7">
+                            <%=followers[i].username  %>
+                        </h4>
+                    </a>
+
+                </div>
+            </div>
+        </div>
+     <% } %>    
+</div>
+
+
+<div class='pagination'>
+    <% limit = 4 %>
+    <% var current = 1 %> 
+    <div class="mb-5 d-flex flex-row mx-auto mt-5">
+    <% for(var i=0 ; i<(total_length/limit) ; i+=1){%> 
+       <a class="pagination_links mr-2" href="/followers/<%=current%>"><%=current%></a>
+        <% current+=1 %> 
+    <% } %>  
+    </div>
+    
+    
+
+
+</div>
+
+
+<%- include('partials/footer1')  -%>

@@ -1,0 +1,31 @@
+<%- include('partials/header1')  -%>
+
+<input class ="w-80 mx-auto" id="search_box" type="text" placeholder="Search by keyword" name='search_box'>
+
+
+<div id="result" style="height:90vh;width:90vw">
+</div>
+
+
+<script>
+$("#search_box").keypress(function(key) {
+if(key.key==='Enter'){
+  KeysToSearch = document.getElementById('search_box').value;
+  var parameters = {search : KeysToSearch};
+  $.get( '/search/query',parameters, function(posts) {
+    console.log('hello')
+    console.log(posts)
+    if(posts.length === 0){
+      var content = '<h5> Try Searching with a different keyword'
+    }else{
+      content = ''
+      for(var i = 0; i < posts.length; i++){
+      content += '<h1>' +  posts[i].title + '</h1>'}
+    }
+    console.log(content)
+    $('#result').html(content);
+    });
+
+}})
+</script>  
+<%- include('partials/footer1')  -%>
