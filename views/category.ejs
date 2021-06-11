@@ -4,7 +4,6 @@
     <% for(var i = 0; i <savedposts.length;i++){%>
         <%  savedpostsid.push(savedposts[i]._id.toString()) %>
     <% } %> 
-    <% console.log(savedpostsid) %> 
 
     <% var userCategories = user.categories_followed %>
     <% categoryIdList = [] %>
@@ -14,12 +13,12 @@
     <% var categoryId = category._id.toString() %>  
     
     
-    <div class="catback">
-        <div class="container mx-auto mt-4">
-            <img class="mx-auto"  src="<%=category.image%>" alt="" style="height:80%;width:80%;margin:auto">
+    <div class="category-head d-flex flex-column  align-items-center">
+        <div class="category-head-img mt-4 d-flex justify-content-center">
+            <img class=""  src="<%=category.image%>" alt="Category Image" >
         </div>
-        <div class="d-flex flex-row justify-content-center">
-            <h1>
+        <div class="p-1 d-flex flex-row justify-content-center align-items-center">
+            <h1 class='mr-4'>
                 <%= category.title %> Blogs
             </h1>
             <% if(categoryIdList.includes(categoryId)){ %> 
@@ -29,23 +28,23 @@
                     <% var idname = 'follow-button' %> 
                     <% var buttontext = 'Follow' %> 
             <% } %> 
-            <span>
-                <button id=<%=idname %> categoryId= <%=category._id%>   type="button" class="btn btn-primary mt-5"> <%=buttontext%></button>
-            </span>
+            <div class="category-button" >
+                <button id=<%=idname %> categoryId= <%=category._id%> > <%=buttontext%></button>
+            </div>
         </div>
     </div>
 
-    <div id="main1" class="main row " style="width: 100%;margin:0;padding-top:60px;">
+    <div id="main1" >
 
-        <div class="blogs-template" style="margin-right: 10px;margin-top:20px;">
+        <div class="blogs-template" >
             <% if (posts.length==0){ %>
                 <div class="cen">oops no posts to show at the moment . Why don't you<a href="/post/compose"> Create One
                 </a> </div>
                 <%}%>
-                <div class="all-posts col-12 col-lg-8 ">
+                <div class="all-posts mx-auto col-12 col-lg-8 ">
                     <%  for(var i=posts.length-1;i>=0;i--){ %>
         
-                        <div class="content-template-main " style="margin-top:40px;">
+                        <div class="content-template-main " style="margin:0 10%;margin-top:40px;">
         
                             <div class=" content-template">
                                 <div class="post-user">
@@ -102,13 +101,11 @@
     <script>
         // follow category request
         $(document).on('click',"[id^=follow-button]",function(e){
-            console.log(e.target)
             categoryId = e.target.getAttribute('categoryId')
             $.ajax({
                 url:`/category/${categoryId}/follow`,
                 method:'put'
             }).always(function(s){
-            console.log(s)
             e.target.id = 'unfollow-button'
             e.target.innerText = 'Unfollow'
         })
@@ -116,13 +113,11 @@
 
                 // unfollow category request
                 $(document).on('click',"[id^=unfollow-button]",function(e){
-            console.log(e.target)
             categoryId = e.target.getAttribute('categoryId')
             $.ajax({
                 url:`/category/${categoryId}/unfollow`,
                 method:'put'
             }).always(function(s){
-            console.log(s)
             e.target.id = 'follow-button'
             e.target.innerText = 'Follow'
         })
@@ -152,7 +147,6 @@
                 url :`/${postId}/unsave`,
                 method:'put',
             }).always(function(res){
-                console.log('success')
                 Icon = e.target
                 Icon.innerHTML ='&#xf097;'
                 e.target.parentElement.id = 'save-button'

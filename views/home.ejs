@@ -129,7 +129,7 @@
         <div class="all-posts col-12 col-lg-8 ">
             <%  for(var i=posts.length-1;i>=0;i--){ %>
 
-                <div class="content-template-main " style="margin-top:40px;">
+                <div class="content-template-main " >
 
                     <div class=" content-template">
                         <div class="post-user">
@@ -138,7 +138,6 @@
                                     <a href="/user/<%=posts[i].postedBy.username%>/dashboard">
                                         <strong style="font-size:16px;line-height: 16px;font-weight:580;"><%=posts[i].postedBy.username%>
                                         <span style="opacity:0.6">in</span>
-                                        <% console.log(posts[i].category) %> 
                                 <%=posts[i].category.title.toLowerCase()  %>
                                     </strong>
                                     </a>
@@ -150,7 +149,7 @@
                             </a>
                         </h4>
                         <p id="post-content-1" style="margin-top:10px; margin-bottom:5px; font-weight:450;margin-bottom:0;opacity:0.8">
-                            <%=posts[i].content.substring(0,120)%>....</p>
+                            <%=posts[i].content.substring(0,90)%>....</p>
 
 
                         <div class="one-line d-flex justify-content-between" style="padding-right:20px;">
@@ -252,7 +251,6 @@
                 url :`/post/${postId}/unsave`,
                 method:'put',
             }).always(function(res){
-                console.log('success')
                 Icon = e.target
                 Icon.innerHTML ='&#xf097;'
                 e.target.parentElement.id = 'save-button'

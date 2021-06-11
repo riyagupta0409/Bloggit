@@ -1,11 +1,10 @@
 <%- include('partials/header1')  -%>
 
-<div class="show_following ml-5 mt-4" style = "min-height:66vh;">
+<div class="mt-4 d-flex flex-column align-items-center" style = "min-height:60vh;">
     <% for(var i = 0; i <following.length;i++) { %>
-        <% console.log(following[i]) %> 
-        <div class="mt-lg-2  d-inline-felx  flex-column  " >
-
-            <div class=" d-flex flex-row mx-auto px-auto">
+    <div class='d-flex flex-row justify-content-between'>
+        <div class="mt-lg-2 mb-3 d-inline-felx  flex-column  " >
+             <div class=" d-flex flex-row mx-auto px-auto">
                 <div class="user-image">
                     <img src="<%=following[i].image  %> " alt="" style="height:60px;width:60px;border-radius:50%;margin-right:5px">
                 </div>
@@ -18,20 +17,23 @@
                             <%=following[i].username  %>
                         </h4>
                     </a>
-
                 </div>
             </div>
         </div>
+        <div class='unfollow-button mt-3 ml-sm-5'>
+            <button class="mx-auto" id='unfollow-button' type="submit" userid=<%=following[i]._id%> >UnFollow</button>
+        </div>
+    </div>
      <% } %>    
 </div>
 
 
-<div class='pagination'>
+<div class='pagination' style='overflow-x: auto;'>
     <% limit = 4 %>
     <% var current = 1 %> 
     <div class="mb-5 d-flex flex-row mx-auto mt-5">
     <% for(var i=0 ; i<(total_length/limit) ; i+=1){%> 
-       <a class="pagination_links mr-2" href="/following/<%=current%>"><%=current%></a>
+       <a class="pagination_links mr-2" href="/user/following/<%=current%>"><%=current%></a>
         <% current+=1 %> 
     <% } %>  
     </div>
@@ -40,6 +42,33 @@
 
 
 </div>
+<script>
+    // for follow button
+    $(document).on('click','[id^=follow-button]',function(e){
+    UserId = e.target.getAttribute('userid')
+    $.ajax({
+        url:`/user/${UserId}/follow`,
+        method:'put'
+    }).always(function(s){
+    e.target.id = 'unfollow-button'
+    e.target.innerText = 'Unfollow'
+})
+})
+
+
+// for unfollow button
+$(document).on('click','[id^=unfollow-button]',function(e){
+    UserId = e.target.getAttribute('userid')
+    $.ajax({
+        url:`/user/${UserId}/unfollow`,
+        method:'put'
+    }).always(function(s){
+    e.target.id = 'follow-button'
+    e.target.innerText = 'Follow'
+})
+})
+
+</script>
 
 
 <%- include('partials/footer1')  -%>

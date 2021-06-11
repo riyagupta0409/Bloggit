@@ -53,7 +53,7 @@ router.post('/add', upload.single('image'),function (req, res){
         });
         // save category 
         await category.save(function (err, category) {
-            if (err) { console.log(err)}else{
+            if (err) { res.redirect('/')}else{
                 res.redirect('/home')
             }
         })
@@ -66,10 +66,10 @@ router.put("/:id/follow", (req, res) => {
     id = req.params.id
     // find category
     Category.findById(id , (err , category) => {
-        if (err){(console.log(err))}else{
+        if (err){res.redirect('/')}else{
             // add category in user's categories array 
             User.findOneAndUpdate({_id:req.user._id} , {$addToSet: { categories_followed : category}},function(err){
-                if (err) { console.log(err) } else{
+                if (err) { res.redirect('/') } else{
                             res.send('success');
                 }
             })
@@ -82,7 +82,7 @@ router.put("/:id/unfollow",(req, res)=>{
     id = req.params.id
     // remove category from user's categories array'
     User.findOneAndUpdate({_id:req.user._id} , {$pull : {categories_followed : id}} , (err)=>{
-        if (err) { console.log(err) } else{
+        if (err) { res.redirect('/') } else{
                 res.send('success')
         }
     })

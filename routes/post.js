@@ -47,7 +47,7 @@ const isLoggedIn =(req,res,next)=>{
 router.get('/compose',isLoggedIn, function (req, res) {
     // send categories to show in selection option 
     Category.find({},(err, category) =>{
-        if (err) { console.log(err)}else {
+        if (err) { res.redirect('/home')}else {
             res.render('compose',{categories:category})
         }
     })
@@ -80,12 +80,12 @@ router.post('/compose',isLoggedIn, upload.single('image'),async function (req, r
                 await Category.findOneAndUpdate({_id:req.body.postCategory},{ $addToSet: { posts: post }})
                 // adding the post to user's posts 
                 User.findOneAndUpdate({ _id: req.user._id }, { $push: { posts: post } }, function (err) {
-                    if (err) { console.log(err); } else
+                    if (err) { res.redirect('/home'); } else
                     res.redirect(`/post/${post._id}`);
                     // add the keywords to the keyword database
                     add_words_in_keyword_database(req.body.userkeywords,post)
                 })
-            } else { console.log(err) }
+            } else { res.redirect('/home') }
         });
     });
 });
@@ -99,7 +99,6 @@ async function add_words_in_keyword_database(keywordslist ,post) {
         var key_ = userKeyword[i].trim();
         // check if the keyword already exists
         var doc = await Keyword.find({name : key_})
-        console.log(doc)
         if(doc.length ===0) {
             // if keyword does not existed make a new document  
             new_keyword_document = new Keyword({
@@ -115,15 +114,14 @@ async function add_words_in_keyword_database(keywordslist ,post) {
 
 // GET -- open the selected post
 router.get('/:postId', function (req, res) {
-        console.log(req.user)
         Post.findById((req.params.postId))
         // populate the user who has posted the post 
         .populate('postedBy')
         // executing the fxn
         .exec(function (err,posts) {
-            if(err){ console.log(err)}
+            if(err){ res.redirect('/home')}
             else{
-                res.render("post1", { post: posts, currentuser: req.user.username })
+                res.render("post", { post: posts, currentuser: req.user.username })
             }
         })
 });
@@ -132,7 +130,7 @@ router.get('/:postId', function (req, res) {
 router.get('/:postId/edit',isLoggedIn, function (req, res) {
     // search for the given post
     Post.findById((req.params.postId), (err, foundPost) => {
-        if (err) { console.log(err) } else
+        if (err) { res.redirect('/home') } else
             // rendering post edit page
             res.render('postedit', { post: foundPost });
     })
@@ -181,10 +179,10 @@ router.delete('/:postId/delete',isLoggedIn, function (req, res) {
             await cloudinary.uploader.destroy(post.imageId);
             // remove post
             post.remove((err) => {
-                if (err) { console.log(err) } else {
+                if (err) { res.redirect('/home') } else {
                     // update user by whom the post has been uploaded
                     User.updateOne({ _id: req.user._id }, { $pull: { posts: req.params.postId } }, function (err) {
-                        if (err) { console.log(err) } else
+                        if (err) { res.redirect('/home') } else
                             res.redirect("/home");
                     })
                 }
@@ -204,7 +202,7 @@ router.post('/:postId/comment/add',isLoggedIn, async (req, res) => {
     var user = req.user.username;
     // add the comment to comment array of given post 
     await Post.findByIdAndUpdate(req.params.postId, { $push: { comments: { content: content, commentedby: user } } }, (err) => {
-        if (err) { console.log(err) } else
+        if (err) { res.redirect('/home') } else
             // send the post 
             Post.findById(req.params.postId, (err, post) => {
                 res.send(post.comments[post.comments.length-1])
@@ -219,7 +217,7 @@ router.delete('/:postId/:commentid/comment/delete',isLoggedIn, (req, res) => {
     const commentid = req.params.commentid;
     // pulling the given comment from the comment array
     Post.updateOne({ _id: postId }, { $pull: { "comments": { _id: commentid } } }, { safe: true, multi: true }, (err) => {
-        if (err) { console.log(err); } 
+        if (err) { res.redirect('/home'); } 
            res.send('success')          
     })
 })
@@ -228,7 +226,7 @@ router.delete('/:postId/:commentid/comment/delete',isLoggedIn, (req, res) => {
 router.put('/like' ,isLoggedIn, async (req, res) => {
     // find the post add username to the likes array 
     await Post.findByIdAndUpdate(req.body.id, { $addToSet: { likes: req.user.username } }, (err) => {
-        if (err) { console.log(err); } else
+        if (err) { res.redirect('/home'); } else
             res.end('success');
     })
 })
@@ -237,7 +235,7 @@ router.put('/like' ,isLoggedIn, async (req, res) => {
 router.put('/unlike' ,isLoggedIn, async (req, res) => {
     // find the post remove username to the likes array 
     await Post.findByIdAndUpdate(req.body.id, { $pull: { likes: req.user.username } }, (err) => {
-        if (err) { console.log(err); } else
+        if (err) { res.redirect('/home'); } else
             res.send('success');
     })
 })
@@ -247,10 +245,10 @@ router.put("/:id/save",isLoggedIn, function (req, res) {
     const id = req.params.id;
     // find the post by id in params
     Post.findById((id), (err, post) => {
-        if (err) { console.log(err) } else
+        if (err) { res.redirect('/home') } else
             // update user and add the post to savedpost array 
             User.findOneAndUpdate({ _id: req.user._id }, { $addToSet: { savedpost: post } }, { new: true, safe: true, upsert: true }, function (err) {
-                if (err) { console.log(err); } else
+                if (err) { res.redirect('/home'); } else
                     res.send('success')
             })
     })
@@ -260,7 +258,7 @@ router.put("/:id/save",isLoggedIn, function (req, res) {
 router.put("/:id/unsave",isLoggedIn, (req, res) => {
     // update user and remove the post from savedpost array 
     User.findByIdAndUpdate(req.user._id, { $pull: { savedpost: req.params.id } }, { new: true, safe: true, upsert: true }, (err) => {
-        if (err) { console.log(err) } else
+        if (err) { res.redirect('/home') } else
             res.send('success');
     })
 })

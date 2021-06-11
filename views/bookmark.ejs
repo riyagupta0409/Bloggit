@@ -1,14 +1,14 @@
 <%- include('partials/header1')  -%>
-    <div class="bookmarks container">
+    <div class="bookmarks container" style="margin-bottom: 50px;">
         <h1 id="savedhead">Your Bookmarks</h1>
         <div class="">
             <% if (savedpost.length==0){ %>
                 <div class="cen">You have no saved posts :-(</div>
                 <%}%>
-                <div id="show-all-bookmarks" class="all-posts col-12 col-lg-8 ">
+                <div id="show-all-bookmarks" class="all-posts ">
                     <%  for(var i=savedpost.length-1;i>=0;i--){ %>
         
-                        <div class="content-template-main " style="margin-top:40px;">
+                        <div class="content-template-main " style="margin-top:40px;margin-left: 0;margin-right:40%">
         
                             <div class=" content-template">
                                 <div class="post-user">
@@ -63,7 +63,6 @@
                 url :`/post/${postId}/unsave`,
                 method:'put',
             }).always(function(res){
-                console.log('success')
                 var parent = document.getElementById('show-all-bookmarks')
                 parent.removeChild(NodeToBeRemoved)
             })

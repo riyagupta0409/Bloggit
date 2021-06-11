@@ -42,13 +42,11 @@
 <script>
             // for follow button
             $(document).on('click','[id^=follow-button]',function(e){
-            console.log(e.target)
             UserId = e.target.getAttribute('userid')
             $.ajax({
                 url:`/user/${UserId}/follow`,
                 method:'put'
             }).always(function(s){
-            console.log(s)
             e.target.id = 'unfollow-button'
             e.target.innerText = 'Unfollow'
         })
@@ -57,13 +55,11 @@
 
         // for unfollow button
         $(document).on('click','[id^=unfollow-button]',function(e){
-            console.log(e.target)
             UserId = e.target.getAttribute('userid')
             $.ajax({
                 url:`/user/${UserId}/unfollow`,
                 method:'put'
             }).always(function(s){
-            console.log(s)
             e.target.id = 'follow-button'
             e.target.innerText = 'Follow'
         })

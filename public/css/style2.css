@@ -4,6 +4,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@300&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=PT+Sans&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Lora:ital@1&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+
 * {
     box-sizing: border-box;
 }
@@ -213,6 +215,7 @@ div.scrollmenu a:hover {
 }
 
 .content-template-main {
+    margin-top:40px;
     display: grid;
     grid-template-columns: 70% 30%;
     margin-left: 15%;
@@ -256,6 +259,9 @@ div.scrollmenu a:hover {
 
 #post-title-1:hover {
     text-decoration: none;
+}
+button:focus {
+	outline: none;
 }
 
 .post-edit button:hover {
@@ -492,13 +498,44 @@ div.scrollmenu a:hover {
 
 /*category ejs*/
 
-.catback h1 {
+.category-button button{
+        width:120px;
+        display:inline-block;
+        border-radius: 10px;
+        border: 1px solid #000080;
+        background-color: #000080;
+        color: #FFFFFF;
+        font-size: 14px;
+        padding: 8px 20px;
+        letter-spacing: 2px;
+        font-family: 'Montserrat', sans-serif;
+        cursor: pointer;
+}
+
+.category-head h1 {
     text-align: center;
     margin-top: 20px;
     margin-bottom: 20px;
-    font-family: 'Merriweather', serif;
-    font-size: 5vw;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 3rem;
 }
+
+.category-head-img{
+    width: 100%;
+}
+
+.category-head-img img{
+    height:40%;
+    width:50%;
+    margin:auto
+}
+
+@media (max-width:480px){
+    .category-head h1{
+        font-size:30px
+    }
+}
+
 
 .cat-home {
     min-height: 61vh;
@@ -545,7 +582,7 @@ textarea:focus {
 .submit {
     width: 100%;
     margin-left: 10px;
-    font-family: 'Roboto Mono';
+    font-family: 'Montserrat', sans-serif;
     background-color: #000;
     padding: 4px;
     outline: none;
@@ -667,10 +704,11 @@ h5 {
 .like-button:hover {
     border: none;
     outline: none !important;
+    background-color: none;
 }
 
 .like-count {
-    font-size: 30px;
+    font-size: 26px;
     color: #000;
 }
 
@@ -774,25 +812,24 @@ i:hover {
     margin-top: 20px;
     width: 50%;
     margin: 20px 25%;
-    padding: 20px;
-    /* box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.2), 0 4px 30px 0 rgba(0, 0, 0, 0.19); */
+    padding: 20px 70px;
     display: grid;
     grid-template-columns: 40% 60%;
     justify-items: center !important;
-    /* align-items: center; */
-    /* background-image: linear-gradient(to right, #cfd9df, #e2ebf0); */
+
 }
 
 .profile-card h4 {
-    font-family: 'Merriweather', serif;
+    font-family: 'Montserrat', sans-serif;
 }
+
 
 .profile-image {
     align-self: center;
-    text-align: center;
     height: 150px;
     width: 150px;
     border-radius: 50%;
+    object-fit: fill;
 }
 
 .image-media h4 {
@@ -809,11 +846,22 @@ i:hover {
     min-height: 50vh;
 }
 
-@media (max-width:900px) {
+/* owner's profile page */
+.profile-stat p , .profile-stat a {
+    font-size: 20px;
+    color: rgb(48, 47, 47);
+}
+
+.bolder {
+    font-weight: 600;
+    color: #000;
+}
+
+@media (max-width:1300px) {
     .profile-card {
         width: 90%;
         margin: 20px 5%;
-        padding: 5px;
+        padding: 5px 40px;
     }
     .profile-card h4 {
         font-size: 23px;
@@ -840,9 +888,80 @@ i:hover {
 }
 
 
+
 /*Edit profile page*/
+
+#edit-link{
+    font-weight: normal;
+    display: inline-block;
+    background-color: #000080;
+    color: #fff;
+    border-radius: 5px;
+    padding:7px 10px;
+    margin-left:15px;
+    font-size: 18px;
+	font-family: 'Montserrat', sans-serif;
+    transform : translateY(-5px)
+
+}
+
+#edit-link:hover , .profile-stat a:hover{
+    text-decoration: none;
+}
+
 
 .edprofile {
     margin-top: 50px;
     min-height: 80vh;
+}
+
+/*dashboard page*/
+.rectangle-button{
+    background-color:#000080;
+    padding: 5px 42px;
+    border:none;
+    color: #fff;
+    margin-left:20px;
+    letter-spacing:1px;
+    transform: translateY(-5px);
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+/*Follower's show page*/
+
+
+.unfollow-button button{
+    margin-top: 5px;
+    width:120px;
+    display:inline-block;
+    border-radius: 10px;
+    border: 1px solid #000080;
+	background-color: #000080;
+	color: #FFFFFF;
+	font-size: 14px;
+	padding: 8px 20px;
+	letter-spacing: 2px;
+	font-family: 'Montserrat', sans-serif;
+    cursor: pointer;
+
+}
+
+.pagination_links {
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    padding: 0px;
+    display: inline-block;
+    background: #fff;
+    border: 2px solid #666;
+    color: #666;
+    text-align: center;
+    font: 32px Arial, sans-serif;
+}
+
+.pagination_links:hover{
+    text-decoration: none;
+    color: #000;
+    border: 2px solid #000;
 }

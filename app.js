@@ -16,11 +16,12 @@ const methodOverride = require('method-override');
 // app configurations 
 app.use(methodOverride('_method'));
 app.set('view engine', 'ejs');
-app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use(bodyParser());
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
 
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // requiring user , post , keywords , category model from user schema 
@@ -34,11 +35,12 @@ app.use(session({
     secret: "our Little Secret.",
     resave: false,
     saveUninitialized: false,
-    cookie:{
-        httpOnly: true,
-        expires: Date.now() + 1000*24*60*60*7,
-        maxAge:1000*60*60*24*7
-    }
+    // cookie:{
+    //     httpOnly: true,
+    //     expires: Date.now() + 1000*24*60*60*7,
+    //     maxAge:1000*60*60*24*7,
+    //     sameSite: 'strict'
+    // }
 }));
 
 // mongoose connection 
@@ -122,7 +124,6 @@ app.get('/check/:username',async (req, res)=>{
 
 // POST -- register user
 app.post('/register', (req, res) => {
-    console.log(req.body)
     User.register({
         username: req.body.username,
         name: req.body.name,
@@ -146,7 +147,6 @@ app.post("/login", function (req, res) {
         username: req.body.username,
         password: req.body.password
     });
-    console.log(user)
     req.login(user, (err) => {
         if (err) {
             res.sendStatus(404);

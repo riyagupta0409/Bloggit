@@ -1,9 +1,12 @@
 <%- include('partials/header1')  -%>
 
-<input class ="w-80 mx-auto" id="search_box" type="text" placeholder="Search by keyword" name='search_box'>
+<div class="d-flex justify-content-center my-4">
+<input class ="w-75 " id="search_box" type="text" placeholder="Search blogs by a word" name='search_box' style="border: 2px solid rgba(102, 101, 101, 0.486)">
+</div>
 
-
-<div id="result" style="height:90vh;width:90vw">
+<div class="blogs-template" style="margin-bottom: 50px;">
+  <div id="result" class="mx-auto all-posts col-12 col-lg-8 ">
+  </div>
 </div>
 
 
@@ -13,18 +16,41 @@ if(key.key==='Enter'){
   KeysToSearch = document.getElementById('search_box').value;
   var parameters = {search : KeysToSearch};
   $.get( '/search/query',parameters, function(posts) {
-    console.log('hello')
-    console.log(posts)
     if(posts.length === 0){
-      var content = '<h5> Try Searching with a different keyword'
-    }else{
-      content = ''
-      for(var i = 0; i < posts.length; i++){
-      content += '<h1>' +  posts[i].title + '</h1>'}
-    }
-    console.log(content)
+      var content = '<h5 style="margin-top:20px"> Try Searching with a different keyword like music</h5>'
     $('#result').html(content);
-    });
+
+    }else{
+      document.getElementById('result').innerHTML =''
+      for(var i = 0; i < posts.length; i++){
+        content = ''
+        content += '<div class=" content-template">'
+        content += '<div class="post-user">'
+        content += '<p style="font-size:0.9rem" class="mb-0">'
+        content += `<span style="opacity:0.8"> <img src="` + posts[i].postedBy.image + `" alt="" style="height:26px;width:26px;border-radius:50%;transform:translate(0,-3px);margin-right:4px;">`
+        content += `<a href="/user/`+posts[i].postedBy.username+`/dashboard">`
+        content += `<strong style="font-size:16px;line-height: 16px;font-weight:580;">` + posts[i].postedBy.username
+        content += `</strong> </a> </span> </div>`
+        content += `<h4 style="margin-bottom:0;">`
+        content += `<a class="to-title" id="post-title-1" href="/post/`+posts[i]._id+`" style="color:#000;">` + posts[i].title.toLowerCase()+`</a> </h4> `
+        content += `<p id="post-content-1" style="margin-top:10px; margin-bottom:5px; font-weight:450;margin-bottom:0;opacity:0.8">`+posts[i].content.substring(0,90)+`....</p>`
+        content += `  <div class="one-line d-flex justify-content-between" style="padding-right:20px;">
+                      <div class="" style="margin:0;margin-top:5px;">
+                      <p style="opacity:1;font-size: 15px;margin-top:8px;">`
+        content += posts[i].date + ' &bull; ' + Math.round(posts[i].content.length/500) + `mins read </p> </div>`
+        content += ` </div></div>`
+        content += `<div class="content-template-image" style="width:100%;height:100%;">`
+        content += `<img src="`+posts[i].image+`" alt='profile image'>`
+        content += `</div> </div>`
+        var main_div =  document.createElement('div');
+        main_div.classList.add('content-template-main');
+        main_div.style.margin = '0';
+        main_div.style.marginTop = '40px';
+        main_div.innerHTML = content;
+        document.getElementById('result').appendChild(main_div)
+      }
+    }
+    }); 
 
 }})
 </script>  

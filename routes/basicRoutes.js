@@ -47,7 +47,7 @@ router.get('/search/query',isLoggedIn ,async function(req, res){
     // get the search query 
     search_keys = req.query.search.toLowerCase().trim(); 
     // look for the query in keyword names 
-    doc = await Keyword.findOne({name:search_keys} ).populate('array_of_posts').limit(10)
+    doc = await Keyword.findOne({name:search_keys} ).populate({path:'array_of_posts',populate:{path:'postedBy'}}).limit(10)
     if(doc){
     // if found send the array of that keyword 
     res.send(doc.array_of_posts)} else{

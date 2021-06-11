@@ -4,31 +4,30 @@
         <div class="image-media ">
             <img class="profile-image" src="<%=user.image %>" alt="">
         </div>
-        <div class="user-info">
-            <h4 style="opacity:0.8">
-                <%=user.username%> . <a href="profile/<%=user._id%>/edit" style="color: #000;opacity: 1;">Edit Profile</a>
+        <div class="user-info mt-2">
+            <h4 style="font-weight:500;">
+                <%=user.username%>  <a id="edit-link" href="profile/<%=user._id%>/edit">Edit Profile</a>
             </h4>
 
-            <h4>
-                <b><%=user.name%></b>
-            </h4>
-
-            <div class="d-flex flex-row justify-content-between"> 
-                <h4>
-                    <b><%=user.posts.length%></b> posts
-                </h4>
-                <a href="/user/followers/1">
-                    <b><%=user.followers.length%></b> followers
+            <div class="profile-stat d-flex flex-row justify-content-between"> 
+                <p style="margin-bottom:0" class="mr-4">
+                    <b class="bolder"><%=user.posts.length%></b> posts
+                </p>
+                <a href="/user/followers/1" >
+                    <b class="bolder"><%=user.followers.length%></b> followers
                 </a>
-                <a href="/user/following/1"> 
-                    <b><%=user.following.length%></b> following
+                <a href="/user/following/1" class="ml-4"> 
+                    <b class="bolder"><%=user.following.length%></b> following
                 </a>
-
             </div>
+
+            <p style="margin:0;margin-top:8px;">
+                <b><%=user.name%></b>
+            </p>
             
-            <h4 style="opacity:0.9">
+            <p style="opacity:0.8;font-size: 24px;">
                 <%=user.bio%>
-            </h4>
+            </p>
         </div>
     </div>
     <hr id="hr1">
@@ -37,21 +36,19 @@
             <h6 style="text-align:center;opacity: .8;">You Have Not Posted Any BLOG Yet . Why don't you just<a href="/post/compose"> Create One
                 </a> Now</h6>
         <% } %> 
-                <div class="">
-                    <div class="all-posts col-12 col-lg-8 ">
+                <div class="blogs-template">
+                    <div class="mx-auto all-posts col-12 col-lg-8 ">
                         <%  for(var i=posts.length-1;i>=0;i--){ %>
-                            <div class="content-template-main " style="margin-top:40px;">
+                            <div class="content-template-main " style="margin:0;margin-top:40px;">
             
                                 <div class=" content-template">
                                     <div class="post-user">
                                         <p style="font-size:0.9rem" class="mb-0">
-                                            <% console.log(posts[i].postedBy) %> 
                                             <span style="opacity:0.8"> <img src=" <%=posts[i].postedBy.image %>" alt="" style="height:26px;width:26px;border-radius:50%;transform:translate(0,-3px);margin-right:4px;">
                                                 <a href="/user/<%=posts[i].postedBy.username%>/dashboard">
                                                     <strong style="font-size:16px;line-height: 16px;font-weight:580;"><%=posts[i].postedBy.username%>
                                                 </strong>
                                                 </a>
-                                                <% console.log(posts[i].category) %> 
                                                 </span>
                                     </div>
                                     <h4 style="margin-bottom:0;">

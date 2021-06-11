@@ -48,7 +48,7 @@ cloudinary.config({
 router.get('/all', function (req, res) {
         // find all users in user model
         User.find({},(err,users) => {
-            if (err){ console.log(err)}else{
+            if (err){ res.redirect('/home')}else{
                 res.render('all_users', { users: users , owner: req.user})
             }
         })
@@ -59,7 +59,7 @@ router.get('/all', function (req, res) {
 router.get('/suggested',(req, res) => {
     // algorithm for suggested users (not written yet )
     User.find({},(err, user) => {
-        if (err) {console.log(err);}else{
+        if (err) {res.redirect('/');}else{
             res.render('all_users',{owner:req.user,users:user})
         }
     })
@@ -71,9 +71,9 @@ router.get("/:user/dashboard", function (req, res) {
         User.findOne({ username: req.params.user })
             // populate the postedby path of all the posts 
             .populate({path:'posts',populate:{path:'postedBy'}}).exec((err, user) => {
+                console.log(req.user.following)
                 res.render('dashboard', { posts: user.posts, user: user  , owner : req.user});
-            })
-
+        })
 })
 
 // owner's profile
@@ -90,7 +90,7 @@ router.get("/profile", (req, res) => {
 router.get("/profile/:id/edit", function (req, res) {
         // find the user 
         User.findById((req.params.id), (err, founduser) => {
-            if (err) { console.log(err)
+            if (err) { res.redirect('/home')
           } else {
               // send user details to profile edit page
                 res.render('profileedit', {user: founduser });
@@ -124,7 +124,7 @@ router.put('/:id', upload.single('image'), (req, res) => {
             user.bio = req.body.bio; 
             // save details 
             await user.save((err) => {
-                if (err) { console.log(err) }
+                if (err) { res.redirect('/home') }
             });
             res.redirect('/home');
         }
@@ -144,7 +144,7 @@ router.get('/followers/:page',(req, res)=>{
         // populate followers array 
         .populate('followers')
         .exec((err, user) => {
-            if (err) console.log(err);
+            if (err) res.redirect('/home');
             else{
                 res.render('followers_show', { owner :user, followers: user.followers.slice(start,end) , total_length : user.followers.length , active:page });}
         })
@@ -163,7 +163,7 @@ router.get('/following/:page',(req, res)=>{
             // populate following array
             .populate('following')
             .exec((err, user) => {
-                if (err) console.log(err);
+                if (err) res.redirect('/home');
                 else{
                     res.render('following_show', { owner :user, following: user.following.slice(start,end) , total_length : user.following.length , active:page });}
             })
@@ -173,16 +173,17 @@ router.get('/following/:page',(req, res)=>{
 
 //follow user request
 router.put("/:id/follow", (req, res) => {
+    // 
     userid = req.params.id
     // find user
     User.findById(userid , (err , user) => {
-        if (err){(console.log(err))}else{
+        if (err){(res.redirect('/home'))}else{
             // find owner user and add the given user to the following array 
             User.findOneAndUpdate({_id:req.user._id} , {$addToSet: { following : user}},function(err){
-                if (err) { console.log(err) } else{
+                if (err) { res.redirect('/home') } else{
                     // find given user and add owner to the followers array 
                     User.findOneAndUpdate({_id:userid} , {$addToSet:{followers : req.user._id}} , (err)=>{
-                        if (err) { console.log(err) }else{
+                        if (err) { res.redirect('/home') }else{
                             res.send('success');
                         }
                     })
@@ -194,18 +195,38 @@ router.put("/:id/follow", (req, res) => {
 
 // unfollow user request
 router.put("/:id/unfollow",(req, res)=>{
+
     userid = req.params.id
     // find owner user and update the given user from the following array 
     User.findOneAndUpdate({_id:req.user._id} , {$pull : {following : userid}} ,{ new: true, safe: true, upsert: true }, (err)=>{
-        if (err) { console.log(err) } else{
+        if (err) { res.redirect('/home') } else{
             // find given user and remove owner from the followers array 
             User.findOneAndUpdate({_id:userid} , {$pull : {followers : req.user._id}},{ new: true, safe: true, upsert: true }, (err)=>{
-              if (err) { console.log(err)}else{
+              if (err) { res.redirect('/home')}else{
                 res.send('success')
               }
             })
         }
     })
 })
+
+// remove users from followers 
+// unfollow user request
+router.put("/:id/remove",(req, res)=>{
+
+    userid = req.params.id
+    // find owner user and update the given user from the following array 
+    User.findOneAndUpdate({_id:req.user._id} , {$pull : {followers : userid}} ,{ new: true, safe: true, upsert: true }, (err)=>{
+        if (err) { res.redirect('/home') } else{
+            // find given user and remove owner from the followers array 
+            User.findOneAndUpdate({_id:userid} , {$pull : {following : req.user._id}},{ new: true, safe: true, upsert: true }, (err)=>{
+              if (err) { res.redirect('/home')}else{
+                res.send('success')
+              }
+            })
+        }
+    })
+})
+
 
 module.exports = router
