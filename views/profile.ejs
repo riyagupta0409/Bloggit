@@ -1,5 +1,11 @@
 <%- include('partials/header1')  -%>
 
+    <% if(success && success.length>0) {%>
+        <div id="successMessage" class="mt-2 alert alert-success alert-dismissible fade show container d-flex justify-content-center hide" role="alert">
+            <%= success%>
+        </div>
+    <% } %> 
+
     <div class="profile-card">
         <div class="image-media ">
             <img class="profile-image" src="<%=user.image %>" alt="">
@@ -82,6 +88,12 @@
                 </div>
     </div>
 
-
+    <script>     
+     $(document).ready(function(){
+        setTimeout(function() {
+        $('#successMessage').remove();
+    }, 2500);
+    });
+       </script>
 
     <%- include('partials/footer1')  -%>

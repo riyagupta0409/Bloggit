@@ -1,3 +1,7 @@
+if(process.env.NODE_ENV !== 'production'){
+    require('dotenv').config()
+}
+
 // importing modules
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -10,8 +14,10 @@ const passport = require('passport');
 const passportLocalMongoose = require('passport-local-mongoose');
 const localStrategy = require('passport-local');
 const methodOverride = require('method-override');
+const MongoStore = require('connect-mongo');
 
 
+const dbUrl = process.env.DB_URL
 
 // app configurations 
 app.use(methodOverride('_method'));
@@ -30,21 +36,33 @@ const Post = require('./models/PostSchema')
 const Keyword = require('./models/KeywordSchema')
 const Category = require('./models/CategorySchema')
 
+const DB_URL = process.env.DB_URL
+const secret = process.env.SECRET
+
+// mongo store for sessions 
+const store = new MongoStore({
+    mongoUrl : DB_URL,
+    secret:secret ,
+    touchAfter : 24*60*60
+});
+
 // creating express session
 app.use(session({
-    secret: "our Little Secret.",
+    store,
+    secret:secret,
     resave: false,
     saveUninitialized: false,
-    // cookie:{
-    //     httpOnly: true,
-    //     expires: Date.now() + 1000*24*60*60*7,
-    //     maxAge:1000*60*60*24*7,
-    //     sameSite: 'strict'
-    // }
+    cookie:{
+        httpOnly: true,
+        expires: Date.now() + 1000*24*60*60*7,
+        maxAge:1000*60*60*24*7,
+        // secure : true
+    }
 }));
 
+
 // mongoose connection 
-mongoose.connect("mongodb+srv://riya_04:riyagupta0110@clusterblog.kte4h.mongodb.net/blogDB", {
+mongoose.connect(DB_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,

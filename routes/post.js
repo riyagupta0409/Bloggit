@@ -29,9 +29,9 @@ var upload = multer({ storage: storage, fileFilter: imageFilter })
 
 // cloudinary configurations
 cloudinary.config({
-    cloud_name: 'deseegftl',
-    api_key: 136897367658659,
-    api_secret: "MfkRXbSvbYX3D3v0iTkN7ueo7qY"
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
 // is logged in middleware
@@ -81,6 +81,7 @@ router.post('/compose',isLoggedIn, upload.single('image'),async function (req, r
                 // adding the post to user's posts 
                 User.findOneAndUpdate({ _id: req.user._id }, { $push: { posts: post } }, function (err) {
                     if (err) { res.redirect('/home'); } else
+                    req.flash('success', 'Your blog has been successfully posted')
                     res.redirect(`/post/${post._id}`);
                     // add the keywords to the keyword database
                     add_words_in_keyword_database(req.body.userkeywords,post)
@@ -162,6 +163,7 @@ router.put('/:id/edit',isLoggedIn, upload.single('image'), (req, res) => {
             post.description = req.body.description;
             // save post
             await post.save();
+            req.flash('success','Your blog has been been successfully updated')
             res.redirect(`/post/${post._id}`);
         }
     });
@@ -183,13 +185,14 @@ router.delete('/:postId/delete',isLoggedIn, function (req, res) {
                     // update user by whom the post has been uploaded
                     User.updateOne({ _id: req.user._id }, { $pull: { posts: req.params.postId } }, function (err) {
                         if (err) { res.redirect('/home') } else
+                            req.flash('success','Your blog has been been successfully deleted')
                             res.redirect("/home");
                     })
                 }
             })
         } catch (err) {
             if (err) {
-                return res.redirect('home');
+                return res.redirect('/home');
             }
         }
     })

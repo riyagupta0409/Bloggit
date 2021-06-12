@@ -29,9 +29,9 @@ var upload = multer({ storage: storage, fileFilter: imageFilter })
 
 // cloudinary configurations
 cloudinary.config({
-    cloud_name: 'deseegftl',
-    api_key: 136897367658659,
-    api_secret: "MfkRXbSvbYX3D3v0iTkN7ueo7qY"
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
 

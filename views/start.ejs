@@ -8,12 +8,13 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
     <link rel="icon" href="/images/logo.png">
     <link rel="stylesheet" href="/css/start.css">
+    
     <script src = "https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 </head>
 <body>
 
-    <div class="container" id="container">
+    <div class="container_" id="container_">
         <div class="form-container sign-up-container" id="sign-up-container">
             <form id="sign-up-form">
                 <h1 class="responsive-head">BLOGGIT</h1>
@@ -45,13 +46,19 @@
         <div class="form-container sign-in-container" id="sign-in-container">
             <form id="sign-in-form">
                 <h1 class="responsive-head">BLOGGIT</h1>
+                <div style="position:absolute;top:0">
+                    <% if(error !=='undefined' && error !=='' && error.length>0) {%>
+                        <%= error %>
+                    <% } %>  
+                </div>
+                
                 <p id="incorrect-info" style="display: none;color:#000;margin:5px 0;">* Incorrect username or password</p>
                 <input type="text" id="sign-in-username" name="sign-in-username" placeholder="Username" />
               
                 <input type="password" name='sign-in-password' id="sign-in-password" placeholder="Password" />
                
-                <a href="#" >Forgot your password?</a>
-                <button id="sign-in-button" type="submit">Sign In</button>
+                <!-- <a href="#" >Forgot your password?</a> -->
+                <button id="sign-in-button" style="margin-top:16px" type="submit">Sign In</button>
                 <p >Haven't registered yet ? <a id="signUp" href="#"style="align-self: start;"> <u>Register now</u> </a></p>   </a>
             </form>
         </div>
@@ -83,7 +90,7 @@
 // js animation on sliding  -- start
 const signUpButton = document.getElementById('signUp');
 const signInButton = document.getElementById('signIn');
-const container = document.getElementById('container');
+const container = document.getElementById('container_');
 
 
 signUpButton.addEventListener('click', () => {

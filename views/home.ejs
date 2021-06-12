@@ -4,6 +4,11 @@
     <% for(var i = 0; i <savedposts.length;i++){%>
         <% savedpostsid.push(savedposts[i]._id.toString()) %>
         <% } %>  
+    <% if(success && success.length>0) {%>
+        <div id="successMessage" class="mt-2 alert alert-success alert-dismissible fade show container d-flex justify-content-center hide" role="alert">
+            <%= success%>
+            </div>
+    <% } %> 
 
     <div id="container1" class="container mx-auto mt-5 " style="border-bottom:1px solid #ccc;margin-bottom:0px;">
         <div class="row" style="margin-bottom:40px;">
@@ -34,7 +39,6 @@
                                     </h2>
                                     <p style="opacity:0.8">
                                         <%=posts[j].content.substring(0,120) %>...
-
                                     </p>
 
                                 </div>
@@ -257,6 +261,11 @@
             })
         })
 
+        $(document).ready(function(){
+            setTimeout(function() {
+            $('#successMessage').remove();
+        }, 2500);
+        });
 
 
     </script>

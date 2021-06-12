@@ -737,10 +737,12 @@ h5 {
 }
 
 .post-media .post-content {
+    overflow: hidden;
     padding: 10px 20px;
 }
 
 .post-media .post-content p {
+    overflow: hidden;
     font-family: 'Source Serif Pro', serif;
 }
 
@@ -964,4 +966,10 @@ i:hover {
     text-decoration: none;
     color: #000;
     border: 2px solid #000;
+}
+
+@media (min-width: 992px){
+.bookmark-right-margin{
+margin-right:40%;
+}
 }

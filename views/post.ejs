@@ -1,5 +1,12 @@
 <%-include('partials/header1') -%>
 
+    <% if(success && success.length>0) {%>
+        <div id="successMessage" class="mt-2 alert alert-success alert-dismissible fade show container d-flex justify-content-center hide" role="alert">
+            <%= success%>
+          </div>
+    <% } %> 
+    
+
     <div class="container">
         <div class="post-media">
             <div class="image-media">
@@ -72,7 +79,9 @@
         <%}%>
     </div>
 
+    <script src = "https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+
         postLikes = '<%=post.likes %>'
         username ='<%currentuser%>'
         if(postLikes.indexOf(username) >= 0 && postLikes.length!==0){
@@ -181,5 +190,13 @@
                 parentElement.removeChild(x.parentElement)
             })
         })
+
+        $(document).ready(function(){
+            setTimeout(function() {
+            $('#successMessage').remove();
+        }, 2500);
+        });
+
+        
 
     </script>
