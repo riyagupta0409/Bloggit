@@ -5,6 +5,7 @@
         <%  savedpostsid.push(savedposts[i]._id.toString()) %>
     <% } %> 
 
+
     <% var userCategories = user.categories_followed %>
     <% categoryIdList = [] %>
     <% for(var i=0; i<userCategories.length;i++){ %>
@@ -82,7 +83,7 @@
                                             <% var icode =  '&#xf097;'%> 
                                            
                                         <% } %> 
-               <button id=<%=id1%> style="border:none;background-color: #fff;font-size:20px"><i class= 'fa' aria-hidden="true"><%-icode %></i></button>
+                                        <button id=<%=id1%> style="border:none;background-color: #fff;font-size:20px"><i class= 'fa' aria-hidden="true"><%-icode %></i></button>
                                     </div>
                                 </div>
                             </div>
@@ -135,7 +136,7 @@
             x  = e.target.parentElement.parentElement
             postId = x.getAttribute("postid")
             $.ajax({
-                url :`/${postId}/save`,
+                url :`/post/${postId}/save`,
                 method:'put',
             }).always(function(res){
                 Icon = e.target
@@ -150,7 +151,7 @@
             x  = e.target.parentElement.parentElement
             postId = x.getAttribute("postid")
             $.ajax({
-                url :`/${postId}/unsave`,
+                url :`/post/${postId}/unsave`,
                 method:'put',
             }).always(function(res){
                 Icon = e.target

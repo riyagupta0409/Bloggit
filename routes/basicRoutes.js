@@ -29,8 +29,8 @@ router.get('/home',isLoggedIn ,function (req, res) {
                         Category.find({})
                         .then(categories => {
                             // rendering 
-                        res.render('home', { posts: posts, name: req.user.name, uimage: req.user.image, 
-                            username: req.user.username, savedposts: user.savedpost,user:req.user ,categories:categories});
+                        res.render('home', { posts: posts, name: user.name, uimage: user.image, 
+                            username: user.username, savedposts: user.savedpost,user:user ,categories:categories});
                         })
                     })
             })

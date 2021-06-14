@@ -255,8 +255,10 @@ router.put("/:id/save",isLoggedIn, function (req, res) {
             // update user and add the post to savedpost array 
             await User.findOneAndUpdate({ _id: req.user._id }, { $addToSet: { savedpost: post } }, {safe: true} )
             User.findById(req.user._id , (err,user) => {
-            if(err) {res.sendStatus(404)}
-            else{res.sendStatus(200)}              
+            if(err) {console.log(err)
+                res.sendStatus(404)}
+            else{res.sendStatus(200)
+                res.end();}              
             })
     })
 })

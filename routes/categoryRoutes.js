@@ -108,7 +108,7 @@ router.get("/:category", function (req, res) {
             res.render("category", {
                 posts: category.posts,
                 category: category,
-                user: req.user,
+                user:user,
                 savedposts:user.savedpost
             })
         }
