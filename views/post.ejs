@@ -5,7 +5,16 @@
             <%= success%>
           </div>
     <% } %> 
-    
+    <!--data to check if current user has liked or not -->
+    <% present = 0  %> 
+    <% for(var i=0; i<post.likes.length; i++) { %>
+        <% if(JSON.stringify(post.likes[i])===JSON.stringify(currentuser)){ %>
+            <% present = 1  %>
+            <% break %>     
+        <%}%> 
+    <% } %> 
+    <p id="present" style="display:none"><%=present%></p>
+
 
     <div class="container">
         <div class="post-media">
@@ -41,14 +50,42 @@
                 </div>
 
             <% }%>
-            <div id="unlike-button-div" style="display: none;">  
-                <button id='unlike-button' class="like-button"><i id="unlike-button" class="fa fa-thumbs-up fa-4x"></i></button>
-                <span class="like-count"><span class='like-count-1' id="like-count"><%=post.likes.length%> </span>likes</span>
+
+            <div class="likeCommentSave d-flex flex-row align-items-end">
+                <div id="unlike-button-div" class="mx-3" style="display: none;">  
+                    <button id='unlike-button' class="like-button"><i id="unlike-button" class="fa fa-thumbs-up fa-2x"></i></button>
+                    <span class="like-count"><span class='like-count-1' id="like-count"><%=post.likes.length%></span></span>
+                </div>
+                <div id="like-button-div" class="mx-3" style="display: none;">
+                    <button id='like-button' class="like-button"><i id="like-button" class="fa fa-thumbs-o-up fa-2x" aria-hidden="true"></i></button> 
+                    <span class="like-count"> <span class='like-count-1' id="like-count"><%=post.likes.length%></span></span>
+                </div>
+                <div class="comment-link mx-3" style="cursor: pointer;">
+                 <span><i class="fa fa-comments fa-2x"></i></span>
+                 <a name="form-com"><span class="like-count ml-1 " id="commentsLength"><%=post.comments.length%> </span></a>
+                 
+                </div> 
+                <% var flag = 0 %>
+                <% for(var i=0;i<savedposts.length;i++) {%>
+                    <% if(JSON.stringify(savedposts[i])===JSON.stringify(post._id)){ %>
+                        <% flag = 1 %>
+                        <% break %>  
+                    <% } %>  
+                <% } %>   
+                <div class="post-edit mx-1" postid = <%=post._id %> >
+                    <% if(flag === 1) {%>
+                        <% var id1 = 'unsave-button' %> 
+                        <% var icode =  '&#xf02e;' %> 
+                        
+                    <% }else{  %> 
+                        <% var id1 = 'save-button' %> 
+                        <% var icode =  '&#xf097;'%> 
+                       
+                    <% } %> 
+                    <button id=<%=id1%> style="border:none;background-color: #fff;font-size:24px"><i class= 'fa' aria-hidden="true"><%-icode %></i></button>
+                </div>
             </div>
-            <div id="like-button-div" style="display: none;">
-                <button id='like-button' class="like-button"><i id="like-button" class="fa fa-thumbs-o-up fa-4x" aria-hidden="true"></i></button> 
-                <span class="like-count"> <span class='like-count-1' id="like-count"><%=post.likes.length%> </span>  likes</span>
-            </div> 
+           
         </div>
     </div>
 
@@ -62,7 +99,7 @@
          <% for(var i = post.comments.length-1;i >=0;i--) {%>
             <div class="comments">
                 <div class="commentedby">
-                    <a href="/home/<%= post.comments[i].commentedby %>/dashboard">
+                    <a href="/user/<%= post.comments[i].commentedby %>/dashboard">
                         <%= post.comments[i].commentedby %>
                     </a>
                 </div>
@@ -72,7 +109,6 @@
                 <% if(currentuser===post.comments[i].commentedby){%>
                     <div class="delete-button-div" todelete=<%=post.comments[i]._id  %> >
                         <button id="delete-button" style="border:none;"><i class="fa fa-trash-o" aria-hidden="true" type="submit">  Delete</i></button>
-
                 </div>
                 <% }%>   
             </div>
@@ -82,9 +118,49 @@
     <script src = "https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
 
-        postLikes = '<%=post.likes %>'
-        username ='<%currentuser%>'
-        if(postLikes.indexOf(username) >= 0 && postLikes.length!==0){
+        // add post to bookmarks 
+        // change bookmark icon
+        $(document).on('click',"[id^=save-button]" ,function(e) {
+            x  = e.target.parentElement.parentElement
+            Icon = e.target
+            postId = x.getAttribute("postid")
+            Icon.innerHTML = '&#xf02e;'
+            e.target.parentElement.id = 'unsave-button'
+            $.ajax({
+                url :`/post/${postId}/save`,
+                method:'put',
+                error:function(){
+                    Icon = e.target
+                    Icon.innerHTML ='&#xf097;'
+                    e.target.parentElement.id = 'save-button'
+                }
+            })
+        })
+
+        //remove post from bookmark
+        // change bookmark icon
+        $(document).on('click',"[id^=unsave-button]" ,function(e) {
+            x  = e.target.parentElement.parentElement
+            postId = x.getAttribute("postid")
+            Icon = e.target
+            Icon.innerHTML ='&#xf097;'
+            e.target.parentElement.id = 'save-button'
+            $.ajax({
+                url :`/post/${postId}/unsave`,
+                method:'put',
+                error:function(){
+                    Icon = e.target
+                    Icon.innerHTML = '&#xf02e;'
+                    e.target.parentElement.id = 'unsave-button'
+                }
+            })
+        })
+
+
+        // to check whether the post has been liked or not         
+        var present = document.getElementById("present").innerText;
+       console.log(present)
+        if(present==='1'){
             document.getElementById('unlike-button-div').style.display = 'block';
         }else{
             document.getElementById('like-button-div').style.display = 'block';
@@ -197,6 +273,9 @@
         }, 2500);
         });
 
+
         
 
     </script>
+
+    <%- include('partials/footer1')  -%>

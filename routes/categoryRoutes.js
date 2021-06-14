@@ -69,8 +69,9 @@ router.put("/:id/follow", (req, res) => {
         if (err){res.redirect('/')}else{
             // add category in user's categories array 
             User.findOneAndUpdate({_id:req.user._id} , {$addToSet: { categories_followed : category}},function(err){
-                if (err) { res.redirect('/') } else{
-                            res.send('success');
+                if (err) { res.status(403).send({ success: false })
+                } else{
+                    res.status(200).send({ success: true})
                 }
             })
         }
@@ -82,8 +83,8 @@ router.put("/:id/unfollow",(req, res)=>{
     id = req.params.id
     // remove category from user's categories array'
     User.findOneAndUpdate({_id:req.user._id} , {$pull : {categories_followed : id}} , (err)=>{
-        if (err) { res.redirect('/') } else{
-                res.send('success')
+        if (err) { res.status(403).send({ success: false }) } else{
+            res.status(200).send({ success: true})
         }
     })
 })

@@ -44,33 +44,48 @@
            if(e.target.id === 'category-heading'){e.target = e.target.children[0];}
            if(e.target.parentElement.parentElement.id!=='follow-button'){return 0;}
             categoryId = e.target.parentElement.parentElement.getAttribute('categoryId')
-            $.ajax({
-                url:`/category/${categoryId}/follow`,
-                method:'put'
-            }).always(function(s){
             var row = e.target.parentElement.parentElement;
             row.style.backgroundColor = '#000080';
             row.style.border =  '5px solid #000080';
             row.style.margin = '15px';
             e.target.parentElement.parentElement.id = 'unfollow-button'
             e.target.parentElement.parentElement.children[1].children[0].style.color = 'white';
-        })
+            
+            $.ajax({
+                url:`/category/${categoryId}/follow`,
+                method:'put',
+                error:function(){
+                    var row = e.target.parentElement.parentElement;
+                    row.style.backgroundColor = '#fff';
+                    row.style.border =  'none';
+                    row.style.margin = '20px';
+                    e.target.parentElement.parentElement.id = 'follow-button'
+                    e.target.parentElement.parentElement.children[1].children[0].style.color = 'black';
+                }
+            })
         })
 
         // unfollow category request
         $(document).on('click',"[id^=unfollow-button]",function(e){
            if(e.target.parentElement.parentElement.id!=='unfollow-button'){return 0;}
             categoryId = e.target.parentElement.parentElement.getAttribute('categoryId')
-            $.ajax({
-                url:`/category/${categoryId}/unfollow`,
-                method:'put'
-            }).always(function(s){
             var row = e.target.parentElement.parentElement;
             row.style.backgroundColor = '#fff';
             row.style.border =  'none';
             row.style.margin = '20px';
             e.target.parentElement.parentElement.id = 'follow-button'
             e.target.parentElement.parentElement.children[1].children[0].style.color = 'black';
+            $.ajax({
+                url:`/category/${categoryId}/unfollow`,
+                method:'put',
+                error:function(){
+                    var row = e.target.parentElement.parentElement;
+                    row.style.backgroundColor = '#000080';
+                    row.style.border =  '5px solid #000080';
+                    row.style.margin = '15px';
+                    e.target.parentElement.parentElement.id = 'unfollow-button'
+                    e.target.parentElement.parentElement.children[1].children[0].style.color = 'white';
+                }
             })
         })
     

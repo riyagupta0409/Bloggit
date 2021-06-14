@@ -1,7 +1,8 @@
 <%- include('partials/header1')  -%>
 
-<div class="d-flex justify-content-center my-4">
+<div class="d-flex justify-content-center my-4 flex-wrap align-items-baseline">
 <input class ="w-75 " id="search_box" type="text" placeholder="Search blogs by a word" name='search_box' style="border: 2px solid rgba(102, 101, 101, 0.486)">
+<button id="search-button" class="add px-4">Search</button>
 </div>
 
 <div class="blogs-template" style="margin-bottom: 50px;">
@@ -11,8 +12,7 @@
 
 
 <script>
-$("#search_box").keypress(function(key) {
-if(key.key==='Enter'){
+$("#search-button").click(function(key) {
   KeysToSearch = document.getElementById('search_box').value;
   var parameters = {search : KeysToSearch};
   $.get( '/search/query',parameters, function(posts) {
@@ -51,7 +51,6 @@ if(key.key==='Enter'){
       }
     }
     }); 
-
-}})
+})
 </script>  
 <%- include('partials/footer1')  -%>

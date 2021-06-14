@@ -10,12 +10,11 @@
                 <h4 style="opacity:0.8" class="mr-2">
                     <%=user.username%>
                 </h4>
-                <% console.log(user._id , owner._id) %>
-                <% console.log(owner.following , 'in ejs ') %>  
+
                 <% if(JSON.stringify(owner._id) !== JSON.stringify(user._id)) { %>
                     <% var flag = 1 %> 
-                    <% for(var i = 0; i <owner.following.length;i++) { %> 
-                        <% if(JSON.stringify(owner.following[i]) === JSON.stringify(user._id)) {%>       
+                    <% for(var i = 0; i <user.followers.length; i++) { %> 
+                        <% if(JSON.stringify(user.followers[i]) === JSON.stringify(owner._id)) {%>       
                             <% var flag=0 %> 
                             <% break %>                 
                         <% } %> 
@@ -36,7 +35,7 @@
                 <p style="margin-bottom:0" class="mr-4">
                     <b class="bolder"><%=user.posts.length%></b> posts
                 </p>
-                <p style="margin-bottom:0">
+                <p style="margin-bottom:0" >
                     <b class="bolder"><%=user.followers.length%></b> followers
                 </p>
                 <p style="margin-bottom:0" class="ml-4"> 
@@ -108,27 +107,46 @@
         // for follow button
         $(document).on('click','[id^=follow-button]',function(e){
             UserId = e.target.getAttribute('userid')
-            $.ajax({
-                url:`/user/${UserId}/follow`,
-                method:'put'
-            }).always(function(s){
             e.target.id = 'unfollow-button'
             e.target.style.paddingRight = '32px';
             e.target.innerText = 'Unfollow'
-        })
+            var followers_node = e.target.parentElement.parentElement.children[1].children[1].children[0];
+            var followers = parseInt(followers_node.innerText) + 1 ; 
+            e.target.parentElement.parentElement.children[1].children[1].children[0].innerText = followers;
+            $.ajax({
+                url:`/user/${UserId}/follow`,
+                method:'put',
+                error:function(){
+                    e.target.id = 'follow-button'
+                    e.target.innerText = 'Follow',
+                    followers_node = e.target.parentElement.parentElement.children[1].children[1].children[0];
+                    followers = parseInt(followers_node.innerText) - 1 ; 
+                    e.target.parentElement.parentElement.children[1].children[1].children[0].innerText = followers;
+                }
+            })
     })
 
 
         // for unfollow button
         $(document).on('click','[id^=unfollow-button]',function(e){
             UserId = e.target.getAttribute('userid')
-            $.ajax({
-                url:`/user/${UserId}/unfollow`,
-                method:'put'
-            }).always(function(s){
             e.target.id = 'follow-button'
             e.target.innerText = 'Follow'
-        })
+            followers_node = e.target.parentElement.parentElement.children[1].children[1].children[0];
+            followers = parseInt(followers_node.innerText) - 1 ; 
+            e.target.parentElement.parentElement.children[1].children[1].children[0].innerText = followers;
+            $.ajax({
+                url:`/user/${UserId}/unfollow`,
+                method:'put',
+                error:function(){
+                    e.target.id = 'unfollow-button'
+                    e.target.style.paddingRight = '32px';
+                    e.target.innerText = 'Unfollow'
+                    followers_node = e.target.parentElement.parentElement.children[1].children[1].children[0];
+                    followers = parseInt(followers_node.innerText) + 1 ; 
+                    e.target.parentElement.parentElement.children[1].children[1].children[0].innerText = followers;
+                }
+            })
         })
     </script>
 

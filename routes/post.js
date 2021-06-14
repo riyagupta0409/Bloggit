@@ -122,7 +122,9 @@ router.get('/:postId', function (req, res) {
         .exec(function (err,posts) {
             if(err){ res.redirect('/home')}
             else{
-                res.render("post", { post: posts, currentuser: req.user.username })
+                User.findById(req.user._id, function (err,user) {
+                    res.render("post", { post: posts, currentuser: user.username ,savedposts : user.savedpost})
+                })
             }
         })
 });
@@ -199,12 +201,12 @@ router.delete('/:postId/delete',isLoggedIn, function (req, res) {
 })
 
 //POST COMMENT -- add comment on the post
-router.post('/:postId/comment/add',isLoggedIn, async (req, res) => {
+router.post('/:postId/comment/add',isLoggedIn,  (req, res) => {
     // content of the comment
     var content = req.body.content;
     var user = req.user.username;
     // add the comment to comment array of given post 
-    await Post.findByIdAndUpdate(req.params.postId, { $push: { comments: { content: content, commentedby: user } } }, (err) => {
+    Post.findByIdAndUpdate(req.params.postId, { $push: { comments: { content: content, commentedby: user } } }, (err) => {
         if (err) { res.redirect('/home') } else
             // send the post 
             Post.findById(req.params.postId, (err, post) => {
@@ -246,24 +248,26 @@ router.put('/unlike' ,isLoggedIn, async (req, res) => {
 //bookmark the post
 router.put("/:id/save",isLoggedIn, function (req, res) {
     const id = req.params.id;
+    console.log(id)
     // find the post by id in params
-    Post.findById((id), (err, post) => {
+    Post.findById((id),async (err, post) => {
         if (err) { res.redirect('/home') } else
             // update user and add the post to savedpost array 
-            User.findOneAndUpdate({ _id: req.user._id }, { $addToSet: { savedpost: post } }, { new: true, safe: true, upsert: true }, function (err) {
-                if (err) { res.redirect('/home'); } else
-                    res.send('success')
+            await User.findOneAndUpdate({ _id: req.user._id }, { $addToSet: { savedpost: post } }, {safe: true} )
+            User.findById(req.user._id , (err,user) => {
+            if(err) {res.sendStatus(404)}
+            else{res.sendStatus(200)}              
             })
     })
 })
 
 //unsave bookmarked post
-router.put("/:id/unsave",isLoggedIn, (req, res) => {
-    // update user and remove the post from savedpost array 
-    User.findByIdAndUpdate(req.user._id, { $pull: { savedpost: req.params.id } }, { new: true, safe: true, upsert: true }, (err) => {
-        if (err) { res.redirect('/home') } else
-            res.send('success');
-    })
+router.put("/:id/unsave",isLoggedIn, async (req, res) => {
+    // update user and remove the post from savedpost array
+    await User.findByIdAndUpdate(req.user._id, { $pull: { savedpost: req.params.id } }, {  safe: true})
+    User.findById(req.user._id , (err,user) => {
+        res.sendStatus(200)
+     })
 })
 
 // export the router

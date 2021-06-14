@@ -102,25 +102,31 @@
         // follow category request
         $(document).on('click',"[id^=follow-button]",function(e){
             categoryId = e.target.getAttribute('categoryId')
-            $.ajax({
-                url:`/category/${categoryId}/follow`,
-                method:'put'
-            }).always(function(s){
             e.target.id = 'unfollow-button'
             e.target.innerText = 'Unfollow'
-        })
+            $.ajax({
+                url:`/category/${categoryId}/follow`,
+                method:'put',
+                error:function(){
+                    e.target.id = 'follow-button'
+                    e.target.innerText = 'Follow'
+                }
+            })
         })
 
-                // unfollow category request
-                $(document).on('click',"[id^=unfollow-button]",function(e){
+            // unfollow category request
+            $(document).on('click',"[id^=unfollow-button]",function(e){
             categoryId = e.target.getAttribute('categoryId')
-            $.ajax({
-                url:`/category/${categoryId}/unfollow`,
-                method:'put'
-            }).always(function(s){
             e.target.id = 'follow-button'
             e.target.innerText = 'Follow'
-        })
+            $.ajax({
+                url:`/category/${categoryId}/unfollow`,
+                method:'put',
+                error:function(){
+                    e.target.id = 'unfollow-button'
+                    e.target.innerText = 'Unfollow'
+                }
+            })
         })
 
         // add post to bookmarks 

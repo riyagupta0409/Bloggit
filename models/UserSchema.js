@@ -14,11 +14,11 @@ const userSchema = new mongoose.Schema({
 
     image: {
         type: String,
-        default: "//placehold.it/100"
+        default: "https://res.cloudinary.com/deseegftl/image/upload/v1623566192/user_bu0gc7.png"
     },
     imageId: {
         type: String,
-        default: "//placehold.it/100"
+        default: "user_bu0gc7"
 
     },
     categories_followed :[{ type: mongoose.Schema.Types.ObjectId, ref: 'Category' }],

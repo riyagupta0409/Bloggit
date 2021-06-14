@@ -158,9 +158,7 @@ app.post('/register', (req, res) => {
 });
 
 // Login user authentication 
-
 app.post("/login", function (req, res) {
-
     const user = new User({
         username: req.body.username,
         password: req.body.password

@@ -71,7 +71,6 @@ router.get("/:user/dashboard", function (req, res) {
         User.findOne({ username: req.params.user })
             // populate the postedby path of all the posts 
             .populate({path:'posts',populate:{path:'postedBy'}}).exec((err, user) => {
-                console.log(req.user.following)
                 res.render('dashboard', { posts: user.posts, user: user  , owner : req.user});
         })
 })
@@ -184,8 +183,8 @@ router.put("/:id/follow", (req, res) => {
                 if (err) { res.redirect('/home') } else{
                     // find given user and add owner to the followers array 
                     User.findOneAndUpdate({_id:userid} , {$addToSet:{followers : req.user._id}} , (err)=>{
-                        if (err) { res.redirect('/home') }else{
-                            res.send('success');
+                        if (err) { res.status(403).send({ success: false }) }else{
+                            res.status(200).send({ success: true})
                         }
                     })
                 }
@@ -196,15 +195,14 @@ router.put("/:id/follow", (req, res) => {
 
 // unfollow user request
 router.put("/:id/unfollow",(req, res)=>{
-
-    userid = req.params.id
+      userid = req.params.id
     // find owner user and update the given user from the following array 
     User.findOneAndUpdate({_id:req.user._id} , {$pull : {following : userid}} ,{ new: true, safe: true, upsert: true }, (err)=>{
         if (err) { res.redirect('/home') } else{
             // find given user and remove owner from the followers array 
             User.findOneAndUpdate({_id:userid} , {$pull : {followers : req.user._id}},{ new: true, safe: true, upsert: true }, (err)=>{
-              if (err) { res.redirect('/home')}else{
-                res.send('success')
+              if (err) { res.status(403).send({ success: false })}else{
+                res.status(200).send({ success: true})
               }
             })
         }

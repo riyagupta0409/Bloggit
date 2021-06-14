@@ -570,6 +570,11 @@ textarea {
     margin-left: 10px;
 }
 
+.postCategory select {
+    padding:10px;
+    color:#000080
+}
+
 input::placeholder {
     color: #696969;
 }
@@ -659,13 +664,17 @@ h5 {
 
 .add {
     background-color: #000;
-    min-width: 70px;
     font-size: 20px;
     height: 40px;
     color: #fff;
     border: none;
     outline: none;
     margin-left: 6px;
+    cursor: pointer;
+    vertical-align: middle;
+    letter-spacing: 1px;
+	font-family: 'Montserrat', sans-serif;
+
 }
 
 .post-edit {
@@ -708,7 +717,7 @@ h5 {
 }
 
 .like-count {
-    font-size: 26px;
+    font-size: 22px;
     color: #000;
 }
 
@@ -748,6 +757,12 @@ h5 {
 
 .post-media .post-content h1 {
     font-family: 'Source Serif Pro', serif;
+}
+
+.likeCommentSave{
+    margin-top: 20px;
+    border-top : 1px solid #ccc;
+    padding : 6px 0;
 }
 
 @media (max-width:400px) {
