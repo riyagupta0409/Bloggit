@@ -71,7 +71,9 @@ router.get("/:user/dashboard", function (req, res) {
         User.findOne({ username: req.params.user })
             // populate the postedby path of all the posts 
             .populate({path:'posts',populate:{path:'postedBy'}}).exec((err, user) => {
-                res.render('dashboard', { posts: user.posts, user: user  , owner : req.user});
+                if(user===null || err) {res.redirect('/home')}
+                else{
+                res.render('dashboard', { posts: user.posts, user: user  , owner : req.user});}
         })
 })
 
